@@ -118,7 +118,7 @@ class MainActivity : ComponentActivity() {
 //    DemoPokedexTheme {
 //        Box(contentAlignment = Alignment.BottomCenter) {
 //            Scaffold(Modifier.nestedScroll(behavior.nestedScrollConnection), topBar = {
-//                MyLargeTopAppBar("Pokédex", behavior) {
+//                MyLargeTopAppBar("Pokédex", { behavior }) {
 //                    IconButton(onClick = { }) {
 //                        Icon(ImageVector.vectorResource(id = R.drawable.ic_sort), contentDescription = "Sort")
 //                    }

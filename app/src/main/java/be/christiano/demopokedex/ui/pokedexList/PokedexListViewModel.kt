@@ -7,6 +7,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.christiano.demopokedex.domain.repository.PokemonRepo
 import be.christiano.demopokedex.util.Resource
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class PokedexListViewModel(
@@ -14,21 +16,30 @@ class PokedexListViewModel(
 ) : ViewModel() {
 
     var state by mutableStateOf(PokedexListState())
+    private var searchJob: Job? = null
+
 
     init {
-        getPokemons(fetchFromRemote = true)
+        getPokemons()
     }
 
     fun onEvent(event: PokedexListEvent) {
         when (event) {
-            PokedexListEvent.Refresh -> getPokemons(fetchFromRemote = true)
-            PokedexListEvent.OnSearchQueryChanged -> {}
+            PokedexListEvent.Refresh -> getPokemons()
+            is PokedexListEvent.OnSearchQueryChanged -> {
+                state = state.copy(searchQuery = event.query)
+                searchJob?.cancel()
+                searchJob = viewModelScope.launch {
+                    delay(500)
+                    getPokemons()
+                }
+            }
             PokedexListEvent.ToggleOrderSection -> {}
         }
     }
 
     private fun getPokemons(
-        query: String = "",
+        query: String = state.searchQuery,
         fetchFromRemote: Boolean = false
     ) {
         viewModelScope.launch {

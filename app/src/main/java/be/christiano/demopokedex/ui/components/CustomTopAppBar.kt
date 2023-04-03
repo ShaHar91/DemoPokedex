@@ -20,18 +20,18 @@ import be.christiano.demopokedex.ui.theme.DemoPokedexTheme
 @OptIn(ExperimentalMaterial3Api::class)
 fun MyLargeTopAppBar(
     toolbarTitle: String,
-    behavior: TopAppBarScrollBehavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior(),
+    behavior: @Composable () -> TopAppBarScrollBehavior = { TopAppBarDefaults.exitUntilCollapsedScrollBehavior() },
     actions: @Composable RowScope.() -> Unit = {}
 ) {
 
     val collapsed = 17
     val expanded = 34
 
-    val topAppBarTextSize = (collapsed + (expanded - collapsed) * (1 - behavior.state.collapsedFraction)).sp
+    val topAppBarTextSize = (collapsed + (expanded - collapsed) * (1 - behavior().state.collapsedFraction)).sp
 
     MediumTopAppBar(
         modifier = Modifier.fillMaxWidth(),
-        scrollBehavior = behavior,
+        scrollBehavior = behavior(),
         actions = actions,
         colors = TopAppBarDefaults.largeTopAppBarColors(
             scrolledContainerColor = Color.Transparent,

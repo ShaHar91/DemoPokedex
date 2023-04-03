@@ -18,8 +18,8 @@ interface PokemonDao {
     suspend fun upsertPokemon(pokemonEntity: PokemonEntity)
 
     @RewriteQueriesToDropUnusedColumns
-    @Query("SELECT * FROM pokemon")
-    fun findAllFlow(): Flow<List<SimplePokemonEntity>>
+    @Query("SELECT * FROM pokemon WHERE LOWER(name) LIKE '%' || LOWER(:query) || '%'")
+    fun findAllFlow(query: String): Flow<List<SimplePokemonEntity>>
 
     @RewriteQueriesToDropUnusedColumns
     @Query("SELECT * FROM pokemon WHERE LOWER(name) LIKE '%' || LOWER(:query) || '%'")

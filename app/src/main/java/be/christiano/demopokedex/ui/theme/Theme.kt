@@ -3,7 +3,6 @@ package be.christiano.demopokedex.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.material3.ColorScheme
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
@@ -47,7 +46,7 @@ private val DarkColorScheme = darkColorScheme(
 //    onTertiaryContainer = EerieBlack,
     background = EerieBlack,
 //    onBackground = EerieBlack,
-//    surface = Color.White.copy(0.2f), // Searchview background
+    surface = Color(0xFF4c4c4c), // Searchview background
 //    onSurface = EerieBlack,
 //    surfaceVariant = Color.White.copy(0.2f), // Filled TextView (TextField), Switch, LinearProgressbar (background track), Card
 //    onSurfaceVariant = EerieBlack,
@@ -79,7 +78,7 @@ private val LightColorScheme = lightColorScheme(
 //    onTertiaryContainer = HintOfRed,
     background = HintOfRed,
 //    onBackground = HintOfRed,
-//    surface = Color.White,
+    surface = Color.White,
 //    onSurface = HintOfRed,
 //    surfaceVariant = Color.White,
 //    onSurfaceVariant = HintOfRed,

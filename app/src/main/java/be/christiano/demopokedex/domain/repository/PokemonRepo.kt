@@ -6,6 +6,8 @@ import kotlinx.coroutines.flow.Flow
 
 interface PokemonRepo {
 
+    fun findPokemons(query: String) : Flow<List<Pokemon>>
+
     suspend fun fetchPokemons(
         fetchFromRemote: Boolean,
         query: String

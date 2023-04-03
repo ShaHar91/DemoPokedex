@@ -9,6 +9,7 @@ import be.christiano.demopokedex.domain.repository.PokemonRepo
 import be.christiano.demopokedex.util.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import retrofit2.HttpException
 import java.io.IOException
 
@@ -18,6 +19,7 @@ class PokemonRepoImpl(
 ) : PokemonRepo {
 
     private val dao = db.dao
+    override fun findPokemons(query: String) = dao.findAllFlow(query).map { it.map { entity -> entity.toPokemon() } }
 
     override suspend fun fetchPokemons(
         fetchFromRemote: Boolean,
