@@ -8,10 +8,7 @@ interface PokemonRepo {
 
     fun findPokemons(query: String) : Flow<List<Pokemon>>
 
-    suspend fun fetchPokemons(
-        fetchFromRemote: Boolean,
-        query: String
-    ): Flow<Resource<List<Pokemon>>>
+    suspend fun fetchPokemons(): Flow<Resource<Unit>>
 
     suspend fun fetchPokemon(id:Long): Flow<Resource<Pokemon>>
 }

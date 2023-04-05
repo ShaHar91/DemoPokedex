@@ -21,39 +21,27 @@ class PokemonRepoImpl(
     private val dao = db.dao
     override fun findPokemons(query: String) = dao.findAllFlow(query).map { it.map { entity -> entity.toPokemon() } }
 
-    override suspend fun fetchPokemons(
-        fetchFromRemote: Boolean,
-        query: String
-    ): Flow<Resource<List<Pokemon>>> {
+    override suspend fun fetchPokemons(): Flow<Resource<Unit>> {
         return flow {
             emit(Resource.Loading(true))
-
-            val pokemons = dao.findAll(query)
-            emit(Resource.Success(pokemons.map { it.toPokemon() }))
-
-            val isDbEmpty = pokemons.isEmpty() && query.isBlank()
-            val shouldJustLoadFromCache = !isDbEmpty && !fetchFromRemote
-
-            if (shouldJustLoadFromCache) {
-                emit(Resource.Loading(false))
-                return@flow
-            }
 
             val remotePokemons = try {
                 api.fetchPokemons()
             } catch (e: IOException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load data"))
+                emit(Resource.Loading(false))
                 null
             } catch (e: HttpException) {
                 e.printStackTrace()
                 emit(Resource.Error("Couldn't load data"))
+                emit(Resource.Loading(false))
                 null
             }
 
             remotePokemons?.let { list ->
                 dao.upsertPokemons(list.map { it.toPokemonEntity() })
-                emit(Resource.Success(dao.findAll("").map { it.toPokemon() }))
+                emit(Resource.Success(Unit))
                 emit(Resource.Loading(false))
             }
         }

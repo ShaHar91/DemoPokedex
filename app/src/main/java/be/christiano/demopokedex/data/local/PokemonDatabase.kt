@@ -2,6 +2,7 @@ package be.christiano.demopokedex.data.local
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import be.christiano.demopokedex.data.local.daos.PokemonDao
 import be.christiano.demopokedex.data.local.entities.PokemonEntity
 
 @Database(

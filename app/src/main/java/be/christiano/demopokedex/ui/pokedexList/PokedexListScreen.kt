@@ -27,7 +27,9 @@ import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -44,6 +46,7 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
@@ -55,14 +58,23 @@ fun PokedexListScreen(
 ) {
 
     val viewModel = koinViewModel<PokedexListViewModel>()
+    val state by viewModel.state.collectAsState()
+    val pokemons by viewModel.pokemons.collectAsState(emptyList())
 
     val swipeRefreshState = rememberSwipeRefreshState(
-        isRefreshing = viewModel.state.isRefreshing
+        isRefreshing = state.isRefreshing
     )
 
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+
+    LaunchedEffect(key1 = viewModel.coroutineException) {
+        viewModel.coroutineException?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.coroutineException = null
+        }
+    }
 
     Box(contentAlignment = Alignment.BottomCenter) {
         Scaffold(
@@ -100,7 +112,7 @@ fun PokedexListScreen(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(horizontal = 16.dp),
-                            query = viewModel.state.searchQuery,
+                            query = state.searchQuery,
                             onQueryChange = {
                                 viewModel.onEvent(PokedexListEvent.OnSearchQueryChanged(it))
                             },
@@ -162,7 +174,7 @@ fun PokedexListScreen(
                                 .fillMaxSize()
                                 .padding(top = 10.dp, start = 16.dp, end = 16.dp)
                         ) {
-                            itemsIndexed(viewModel.state.pokemons) { index, pokemon ->
+                            itemsIndexed(pokemons) { index, pokemon ->
                                 if (index == 0) {
                                     Spacer(modifier = Modifier.height(6.dp))
                                 }
@@ -179,7 +191,7 @@ fun PokedexListScreen(
             }
         }
 
-        if (viewModel.state.isLoading) {
+        if (state.isLoading) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
     }

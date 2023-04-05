@@ -7,17 +7,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.christiano.demopokedex.domain.repository.PokemonRepo
 import be.christiano.demopokedex.util.Resource
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
 class PokedexListViewModel(
     private val repository: PokemonRepo
 ) : ViewModel() {
 
-    var state by mutableStateOf(PokedexListState())
-    private var searchJob: Job? = null
+    val state = MutableStateFlow(PokedexListState())
 
+    val pokemons = state.map { it.searchQuery }.debounce { if (it.isNotBlank()) 500 else 0 }.flatMapLatest {
+        repository.findPokemons(it)
+    }
+
+    var coroutineException by mutableStateOf<String?>(null)
 
     init {
         getPokemons()
@@ -27,34 +33,24 @@ class PokedexListViewModel(
         when (event) {
             PokedexListEvent.Refresh -> getPokemons()
             is PokedexListEvent.OnSearchQueryChanged -> {
-                state = state.copy(searchQuery = event.query)
-                searchJob?.cancel()
-                searchJob = viewModelScope.launch {
-                    delay(500)
-                    getPokemons()
-                }
+                state.tryEmit(state.value.copy(searchQuery = event.query))
             }
             PokedexListEvent.ToggleOrderSection -> {}
         }
     }
 
-    private fun getPokemons(
-        query: String = state.searchQuery,
-        fetchFromRemote: Boolean = false
-    ) {
+    private fun getPokemons() {
         viewModelScope.launch {
-            repository.fetchPokemons(fetchFromRemote, query)
+            repository.fetchPokemons()
                 .collect { result ->
                     when (result) {
-                        is Resource.Success -> {
-                            result.data?.let {
-                                state = state.copy(pokemons = it)
-                            }
+                        is Resource.Error -> {
+                            coroutineException = result.message
                         }
-                        is Resource.Error -> Unit
                         is Resource.Loading -> {
-                            state = state.copy(isLoading = result.isLoading)
+                            state.tryEmit(state.value.copy(isLoading = result.isLoading))
                         }
+                        else -> Unit
                     }
                 }
         }

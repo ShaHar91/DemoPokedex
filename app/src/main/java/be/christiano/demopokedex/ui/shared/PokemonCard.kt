@@ -60,11 +60,11 @@ fun PokemonCard(
             Spacer(modifier = Modifier.width(8.dp))
 
             Row {
-                Text(text = pokemon.type1)
+                TypeCard(type = Type.parseType(pokemon.type1))
 
                 if (pokemon.type2 != null) {
                     Spacer(modifier = Modifier.width(6.dp))
-                    Text(text = pokemon.type2)
+                    TypeCard(type = Type.parseType(pokemon.type2))
                 }
             }
 

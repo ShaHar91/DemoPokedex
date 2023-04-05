@@ -1,4 +1,4 @@
-package be.christiano.demopokedex.data.local
+package be.christiano.demopokedex.data.local.daos
 
 import androidx.room.Dao
 import androidx.room.Query
@@ -12,7 +12,7 @@ import kotlinx.coroutines.flow.Flow
 interface PokemonDao {
 
     @Upsert(PokemonEntity::class)
-    suspend fun upsertPokemons(simplePokemons: List<SimplePokemonEntity>) //TODO: this breaks!!! Something with the insert/upsert? 🤔
+    suspend fun upsertPokemons(simplePokemons: List<SimplePokemonEntity>)
 
     @Upsert(PokemonEntity::class)
     suspend fun upsertPokemon(pokemonEntity: PokemonEntity)
