@@ -1,5 +1,6 @@
 package be.christiano.demopokedex.ui.pokedexList
 
+import android.content.res.Configuration
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,19 +39,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import be.christiano.demopokedex.R
+import be.christiano.demopokedex.domain.model.Pokemon
 import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
 import be.christiano.demopokedex.ui.shared.PokemonCard
+import be.christiano.demopokedex.ui.theme.DemoPokedexTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.DestinationsNavigator
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Destination(start = true)
 fun PokedexListScreen(
@@ -59,7 +61,25 @@ fun PokedexListScreen(
 
     val viewModel = koinViewModel<PokedexListViewModel>()
     val state by viewModel.state.collectAsState()
-    val pokemons by viewModel.pokemons.collectAsState(emptyList())
+
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(key1 = viewModel.coroutineException) {
+        viewModel.coroutineException?.let {
+            snackbarHostState.showSnackbar(it)
+            viewModel.coroutineException = null
+        }
+    }
+
+    PokedexListScreenContent(state = state, viewModel::onEvent)
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun PokedexListScreenContent(
+    state: PokedexListState,
+    onEvent: (PokedexListEvent) -> Unit
+) {
 
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = state.isRefreshing
@@ -68,13 +88,6 @@ fun PokedexListScreen(
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
-
-    LaunchedEffect(key1 = viewModel.coroutineException) {
-        viewModel.coroutineException?.let {
-            snackbarHostState.showSnackbar(it)
-            viewModel.coroutineException = null
-        }
-    }
 
     Box(contentAlignment = Alignment.BottomCenter) {
         Scaffold(
@@ -98,7 +111,7 @@ fun PokedexListScreen(
             ) {
 
                 SwipeRefresh(state = swipeRefreshState, onRefresh = {
-                    viewModel.onEvent(PokedexListEvent.Refresh)
+                    onEvent(PokedexListEvent.Refresh)
                 }) {
 
                     Column(
@@ -114,7 +127,7 @@ fun PokedexListScreen(
                                 .padding(horizontal = 16.dp),
                             query = state.searchQuery,
                             onQueryChange = {
-                                viewModel.onEvent(PokedexListEvent.OnSearchQueryChanged(it))
+                                onEvent(PokedexListEvent.OnSearchQueryChanged(it))
                             },
                             onSearch = {},
                             shape = RoundedCornerShape(10.dp),
@@ -174,7 +187,7 @@ fun PokedexListScreen(
                                 .fillMaxSize()
                                 .padding(top = 10.dp, start = 16.dp, end = 16.dp)
                         ) {
-                            itemsIndexed(pokemons) { index, pokemon ->
+                            itemsIndexed(state.pokemons) { index, pokemon ->
                                 if (index == 0) {
                                     Spacer(modifier = Modifier.height(6.dp))
                                 }
@@ -194,5 +207,19 @@ fun PokedexListScreen(
         if (state.isLoading) {
             LinearProgressIndicator(modifier = Modifier.fillMaxWidth())
         }
+    }
+}
+
+@Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Composable
+fun PokedexListScreenPreview() {
+    DemoPokedexTheme {
+        PokedexListScreenContent(
+            PokedexListState(pokemons = listOf(
+                Pokemon(1,"", "Bulbasaur", "grass", "poison"),
+                Pokemon(3,"", "Charmander", "fire", null),
+            ))
+        ) {}
     }
 }

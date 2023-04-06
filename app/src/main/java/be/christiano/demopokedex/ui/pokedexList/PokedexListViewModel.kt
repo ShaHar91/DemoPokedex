@@ -10,7 +10,9 @@ import be.christiano.demopokedex.util.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class PokedexListViewModel(
@@ -19,14 +21,16 @@ class PokedexListViewModel(
 
     val state = MutableStateFlow(PokedexListState())
 
-    val pokemons = state.map { it.searchQuery }.debounce { if (it.isNotBlank()) 500 else 0 }.flatMapLatest {
-        repository.findPokemons(it)
-    }
-
     var coroutineException by mutableStateOf<String?>(null)
 
     init {
         getPokemons()
+
+        state.map { it.searchQuery }.debounce { if (it.isNotBlank()) 500 else 0 }.flatMapLatest {
+            repository.findPokemons(it)
+        }.onEach {
+            state.tryEmit(state.value.copy(pokemons = it))
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: PokedexListEvent) {
