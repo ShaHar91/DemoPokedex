@@ -41,24 +41,28 @@ import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import be.christiano.demopokedex.R
 import be.christiano.demopokedex.domain.model.Pokemon
+import be.christiano.demopokedex.ui.MainNavGraph
 import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
+import be.christiano.demopokedex.ui.destinations.PokemonDetailScreenDestination
 import be.christiano.demopokedex.ui.shared.PokemonCard
 import be.christiano.demopokedex.ui.theme.DemoPokedexTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
-import com.ramcosta.composedestinations.navigation.DestinationsNavigator
+import com.ramcosta.composedestinations.navigation.navigate
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-@Destination(start = true)
+@Destination
+@MainNavGraph(start = true)
 fun PokedexListScreen(
-    navigator: DestinationsNavigator
+    navigator: NavController
 ) {
-
     val viewModel = koinViewModel<PokedexListViewModel>()
     val state by viewModel.state.collectAsState()
 
@@ -71,16 +75,16 @@ fun PokedexListScreen(
         }
     }
 
-    PokedexListScreenContent(state = state, viewModel::onEvent)
+    PokedexListScreenContent(state = state, navigator = navigator, viewModel::onEvent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokedexListScreenContent(
     state: PokedexListState,
+    navigator: NavController,
     onEvent: (PokedexListEvent) -> Unit
 ) {
-
     val swipeRefreshState = rememberSwipeRefreshState(
         isRefreshing = state.isRefreshing
     )
@@ -95,7 +99,7 @@ fun PokedexListScreenContent(
                 .nestedScroll(behavior.nestedScrollConnection)
                 .fillMaxSize(),
             topBar = {
-                MyLargeTopAppBar("Pokédex", { behavior }) {
+                MyLargeTopAppBar("Pokédex", navigator, behavior = { behavior }) {
                     IconButton(onClick = { }) {
                         Icon(ImageVector.vectorResource(id = R.drawable.ic_sort), contentDescription = "Sort")
                     }
@@ -193,7 +197,7 @@ fun PokedexListScreenContent(
                                 }
 
                                 PokemonCard(pokemon = pokemon, modifier = Modifier.fillMaxWidth()) {
-
+                                    navigator.navigate(PokemonDetailScreenDestination)
                                 }
 
                                 Spacer(modifier = Modifier.height(10.dp))
@@ -216,10 +220,13 @@ fun PokedexListScreenContent(
 fun PokedexListScreenPreview() {
     DemoPokedexTheme {
         PokedexListScreenContent(
-            PokedexListState(pokemons = listOf(
-                Pokemon(1,"", "Bulbasaur", "grass", "poison"),
-                Pokemon(3,"", "Charmander", "fire", null),
-            ))
+            PokedexListState(
+                pokemons = listOf(
+                    Pokemon(1, "", "Bulbasaur", "grass", "poison"),
+                    Pokemon(3, "", "Charmander", "fire", null),
+                )
+            ),
+            rememberNavController()
         ) {}
     }
 }
