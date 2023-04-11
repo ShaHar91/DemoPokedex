@@ -13,7 +13,7 @@ interface PokemonApi {
         @Url url: String = "https://stoplight.io/mocks/appwise-be/pokemon/57519009/pokemon"
     ): List<PokemonSimpleDto>
 
-    @GET("{id}")
+    @GET("pokemon/{id}")
     suspend fun fetchPokemon(
         @Path("id") id: Long
     ): PokemonDto

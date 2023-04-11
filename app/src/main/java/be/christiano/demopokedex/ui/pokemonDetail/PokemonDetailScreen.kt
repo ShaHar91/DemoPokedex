@@ -6,6 +6,8 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -20,14 +22,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import be.christiano.demopokedex.R
+import be.christiano.demopokedex.domain.model.Pokemon
 import be.christiano.demopokedex.ui.MainNavGraph
 import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
 import be.christiano.demopokedex.ui.theme.DemoPokedexTheme
@@ -35,24 +35,28 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import org.koin.androidx.compose.koinViewModel
+import org.koin.core.parameter.parametersOf
 
 @Composable
 @Destination
 @MainNavGraph
 fun PokemonDetailScreen(
-    navigator: NavController
-//    pokemon: Pokemon
+    navController: NavController,
+    pokemonId: Int,
+    pokemonName: String
 ) {
-    val viewModel = koinViewModel<PokemonDetailViewModel>()
+    val viewModel = koinViewModel<PokemonDetailViewModel> {
+        parametersOf(Pokemon(pokemonId, name = pokemonName))
+    }
     val state by viewModel.state.collectAsState()
 
-    PokemonDetailScreenContent(navigator, state, viewModel::onEvent)
+    PokemonDetailScreenContent(navController, state, viewModel::onEvent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonDetailScreenContent(
-    navigator: NavController,
+    navController: NavController,
     state: PokemonDetailState,
     onEvent: (PokemonDetailEvent) -> Unit
 ) {
@@ -69,9 +73,10 @@ fun PokemonDetailScreenContent(
                 .nestedScroll(behavior.nestedScrollConnection)
                 .fillMaxSize(),
             topBar = {
-                MyLargeTopAppBar("Pokemon detail!", navController = navigator, behavior = { behavior }) {
+                MyLargeTopAppBar(state.pokemon?.name ?: "", navController = navController, behavior = { behavior }) {
                     IconButton(onClick = { }) {
-                        Icon(ImageVector.vectorResource(id = R.drawable.ic_sort), contentDescription = "Sort")
+                        //TODO: add a difference when the pokemon is favorite or not!
+                        Icon(Icons.Outlined.FavoriteBorder, contentDescription = "Favorite this pokemon")
                     }
                 }
             },

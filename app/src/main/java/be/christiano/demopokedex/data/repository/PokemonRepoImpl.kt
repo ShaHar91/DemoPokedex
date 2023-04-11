@@ -21,6 +21,8 @@ class PokemonRepoImpl(
     private val dao = db.dao
     override fun findPokemons(query: String) = dao.findAllFlow(query).map { it.map { entity -> entity.toPokemon() } }
 
+    override fun findPokemonByIdFlow(id: Int) = dao.findByIdFlow(id.toLong()).map { it?.toPokemon() }
+
     override suspend fun fetchPokemons(): Flow<Resource<Unit>> {
         return flow {
             emit(Resource.Loading(true))
@@ -47,12 +49,9 @@ class PokemonRepoImpl(
         }
     }
 
-    override suspend fun fetchPokemon(id: Long): Flow<Resource<Pokemon>> {
+    override suspend fun fetchPokemon(id: Long): Flow<Resource<Unit>> {
         return flow {
             emit(Resource.Loading(true))
-
-            val pokemon = dao.findById(id)
-            emit(Resource.Success(pokemon?.toPokemon()))
 
             val remotePokemon = try {
                 api.fetchPokemon(id)
@@ -68,7 +67,7 @@ class PokemonRepoImpl(
 
             remotePokemon?.let { mon ->
                 dao.upsertPokemon(mon.toPokemonEntity())
-                emit(Resource.Success(dao.findById(id)?.toPokemon()))
+                emit(Resource.Success(Unit))
                 emit(Resource.Loading(false))
             }
         }

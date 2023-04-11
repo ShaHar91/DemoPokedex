@@ -61,7 +61,7 @@ import org.koin.androidx.compose.koinViewModel
 @Destination
 @MainNavGraph(start = true)
 fun PokedexListScreen(
-    navigator: NavController
+    navController: NavController
 ) {
     val viewModel = koinViewModel<PokedexListViewModel>()
     val state by viewModel.state.collectAsState()
@@ -75,14 +75,14 @@ fun PokedexListScreen(
         }
     }
 
-    PokedexListScreenContent(state = state, navigator = navigator, viewModel::onEvent)
+    PokedexListScreenContent(state = state, navController = navController, viewModel::onEvent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokedexListScreenContent(
     state: PokedexListState,
-    navigator: NavController,
+    navController: NavController,
     onEvent: (PokedexListEvent) -> Unit
 ) {
     val swipeRefreshState = rememberSwipeRefreshState(
@@ -99,7 +99,7 @@ fun PokedexListScreenContent(
                 .nestedScroll(behavior.nestedScrollConnection)
                 .fillMaxSize(),
             topBar = {
-                MyLargeTopAppBar("Pokédex", navigator, behavior = { behavior }) {
+                MyLargeTopAppBar("Pokédex", navController, behavior = { behavior }) {
                     IconButton(onClick = { }) {
                         Icon(ImageVector.vectorResource(id = R.drawable.ic_sort), contentDescription = "Sort")
                     }
@@ -197,7 +197,7 @@ fun PokedexListScreenContent(
                                 }
 
                                 PokemonCard(pokemon = pokemon, modifier = Modifier.fillMaxWidth()) {
-                                    navigator.navigate(PokemonDetailScreenDestination)
+                                    navController.navigate(PokemonDetailScreenDestination(pokemon.number, pokemon.name))
                                 }
 
                                 Spacer(modifier = Modifier.height(10.dp))
@@ -214,8 +214,8 @@ fun PokedexListScreenContent(
     }
 }
 
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showSystemUi = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun PokedexListScreenPreview() {
     DemoPokedexTheme {
