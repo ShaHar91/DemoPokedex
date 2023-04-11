@@ -2,6 +2,7 @@ package be.christiano.demopokedex.data.repository
 
 import be.christiano.demopokedex.data.local.PokemonDatabase
 import be.christiano.demopokedex.data.mapper.toPokemon
+import be.christiano.demopokedex.data.mapper.toPokemonDetail
 import be.christiano.demopokedex.data.mapper.toPokemonEntity
 import be.christiano.demopokedex.data.remote.PokemonApi
 import be.christiano.demopokedex.domain.model.Pokemon
@@ -21,7 +22,7 @@ class PokemonRepoImpl(
     private val dao = db.dao
     override fun findPokemons(query: String) = dao.findAllFlow(query).map { it.map { entity -> entity.toPokemon() } }
 
-    override fun findPokemonByIdFlow(id: Int) = dao.findByIdFlow(id.toLong()).map { it?.toPokemon() }
+    override fun findPokemonByIdFlow(id: Int) = dao.findByIdFlow(id.toLong()).map { it?.toPokemonDetail() }
 
     override suspend fun fetchPokemons(): Flow<Resource<Unit>> {
         return flow {

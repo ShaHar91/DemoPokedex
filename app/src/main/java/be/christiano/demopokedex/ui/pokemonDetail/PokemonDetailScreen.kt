@@ -3,9 +3,14 @@ package be.christiano.demopokedex.ui.pokemonDetail
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -15,6 +20,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -27,9 +33,11 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import be.christiano.demopokedex.domain.model.Pokemon
+import be.christiano.demopokedex.domain.model.PokemonDetail
 import be.christiano.demopokedex.ui.MainNavGraph
 import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
+import be.christiano.demopokedex.ui.shared.Type
+import be.christiano.demopokedex.ui.shared.TypeCard
 import be.christiano.demopokedex.ui.theme.DemoPokedexTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
@@ -46,7 +54,7 @@ fun PokemonDetailScreen(
     pokemonName: String
 ) {
     val viewModel = koinViewModel<PokemonDetailViewModel> {
-        parametersOf(Pokemon(pokemonId, name = pokemonName))
+        parametersOf(PokemonDetail(pokemonId, name = pokemonName))
     }
     val state by viewModel.state.collectAsState()
 
@@ -66,6 +74,7 @@ fun PokemonDetailScreenContent(
 
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
+    val scrollState = rememberScrollState()
 
     Box(contentAlignment = Alignment.BottomCenter) {
         Scaffold(
@@ -96,8 +105,31 @@ fun PokemonDetailScreenContent(
                     Column(
                         Modifier
                             .fillMaxSize()
+                            .verticalScroll(scrollState)
                             .padding(vertical = 8.dp)
                     ) {
+
+                        Section(modifier = Modifier.padding(horizontal = 16.dp), headerText = "About") {
+                            Row {
+                                Text(text = "Type")
+
+                                state.pokemon?.type1?.let {
+                                    if (it.isBlank()) return@let
+                                    TypeCard(type = Type.parseType(it))
+                                }
+                                state.pokemon?.type2?.let {
+                                    if (it.isBlank()) return@let
+                                    Spacer(modifier = Modifier.width(6.dp))
+
+                                    TypeCard(type = Type.parseType(it))
+                                }
+                            }
+
+                            Row {
+                                Text(text = "Number")
+                                Text(text = state.pokemon?.number?.toString() ?: "")
+                            }
+                        }
                     }
                 }
             }
@@ -116,7 +148,9 @@ fun PokemonDetailScreenPreview() {
     DemoPokedexTheme {
         PokemonDetailScreenContent(
             rememberNavController(),
-            PokemonDetailState()
+            PokemonDetailState(
+                PokemonDetail(1, "", "Bulbasaur", "grass", "poison", "Overgrow", "Chlorophyl", null, 18, 20)
+            )
         ) {}
     }
 }

@@ -6,6 +6,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.christiano.demopokedex.domain.model.Pokemon
+import be.christiano.demopokedex.domain.model.PokemonDetail
 import be.christiano.demopokedex.domain.repository.PokemonRepo
 import be.christiano.demopokedex.util.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,7 +15,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class PokemonDetailViewModel(
-    private val pokemon: Pokemon,
+    private val pokemon: PokemonDetail,
     private val repository: PokemonRepo
 ) : ViewModel() {
 
