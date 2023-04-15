@@ -50,9 +50,9 @@ fastlane/README.md
 fastlane/build
 
 #keystore en json ignoren
-tc-signing.jks
+signing.jks
 gc_fastlane_keys.json
-tc-signing.gradle
+signing.gradle
 
 #zodat Bitrise CI dirty kan managen fix for detached header
 Vendor
