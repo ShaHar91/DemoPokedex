@@ -1,13 +1,16 @@
 package be.christiano.demopokedex.ui.pokemonDetail
 
 import android.content.res.Configuration
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -28,17 +31,23 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import be.christiano.demopokedex.domain.model.PokemonDetail
+import be.christiano.demopokedex.domain.model.heightInMeters
+import be.christiano.demopokedex.domain.model.listOfAbilities
+import be.christiano.demopokedex.domain.model.weightInKg
 import be.christiano.demopokedex.ui.MainNavGraph
 import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
 import be.christiano.demopokedex.ui.shared.Type
 import be.christiano.demopokedex.ui.shared.TypeCard
 import be.christiano.demopokedex.ui.theme.DemoPokedexTheme
+import coil.compose.AsyncImage
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
@@ -109,9 +118,17 @@ fun PokemonDetailScreenContent(
                             .padding(vertical = 8.dp)
                     ) {
 
+                        AsyncImage(
+                            modifier = Modifier
+                                .size(200.dp)
+                                .align(Alignment.CenterHorizontally),
+                            model = state.pokemon?.frontDefault,
+                            contentDescription = "Image for ${state.pokemon?.name}"
+                        )
+
                         Section(modifier = Modifier.padding(horizontal = 16.dp), headerText = "About") {
                             Row {
-                                Text(text = "Type")
+                                Text(modifier = Modifier.fillMaxWidth(0.4f), text = "Type")
 
                                 state.pokemon?.type1?.let {
                                     if (it.isBlank()) return@let
@@ -125,9 +142,32 @@ fun PokemonDetailScreenContent(
                                 }
                             }
 
+                            Spacer(modifier = Modifier.height(10.dp))
+
                             Row {
-                                Text(text = "Number")
+                                Text(modifier = Modifier.fillMaxWidth(0.4f), text = "Number")
                                 Text(text = state.pokemon?.number?.toString() ?: "")
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row {
+                                Text(modifier = Modifier.fillMaxWidth(0.4f), text = "Hoogte")
+                                Text(text = state.pokemon?.heightInMeters() ?: "")
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row {
+                                Text(modifier = Modifier.fillMaxWidth(0.4f), text = "Gewicht")
+                                Text(text = state.pokemon?.weightInKg() ?: "")
+                            }
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            Row {
+                                Text(modifier = Modifier.fillMaxWidth(0.4f), text = "Vaardigheden")
+                                Text(text = state.pokemon?.listOfAbilities()?.joinToString(", ") ?: "")
                             }
                         }
                     }
@@ -141,15 +181,15 @@ fun PokemonDetailScreenContent(
     }
 }
 
-@Preview
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES)
+@Preview(showSystemUi = true)
+@Preview(showSystemUi = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 fun PokemonDetailScreenPreview() {
     DemoPokedexTheme {
         PokemonDetailScreenContent(
             rememberNavController(),
             PokemonDetailState(
-                PokemonDetail(1, "", "Bulbasaur", "grass", "poison", "Overgrow", "Chlorophyl", null, 18, 20)
+                PokemonDetail(1, "", "Bulbasaur", "grass", "poison", "Overgrow", null, "Chlorophyl", 18, 20, "Seed")
             )
         ) {}
     }

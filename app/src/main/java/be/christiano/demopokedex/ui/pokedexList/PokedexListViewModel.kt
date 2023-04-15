@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PokedexListViewModel(
@@ -28,8 +29,8 @@ class PokedexListViewModel(
 
         state.map { it.searchQuery }.debounce { if (it.isNotBlank()) 500 else 0 }.flatMapLatest {
             repository.findPokemons(it)
-        }.onEach {
-            state.tryEmit(state.value.copy(pokemons = it))
+        }.onEach {list->
+            state.update { it.copy(pokemons = list) }
         }.launchIn(viewModelScope)
     }
 
@@ -37,7 +38,7 @@ class PokedexListViewModel(
         when (event) {
             PokedexListEvent.Refresh -> getPokemons()
             is PokedexListEvent.OnSearchQueryChanged -> {
-                state.tryEmit(state.value.copy(searchQuery = event.query))
+                state.update { it.copy(searchQuery = event.query) }
             }
             PokedexListEvent.ToggleOrderSection -> {}
         }
@@ -52,7 +53,7 @@ class PokedexListViewModel(
                             coroutineException = result.message
                         }
                         is Resource.Loading -> {
-                            state.tryEmit(state.value.copy(isLoading = result.isLoading))
+                            state.update { it.copy(isLoading = result.isLoading) }
                         }
                         else -> Unit
                     }

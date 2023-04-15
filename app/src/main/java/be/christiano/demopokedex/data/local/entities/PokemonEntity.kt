@@ -25,8 +25,6 @@ data class PokemonEntity(
     @ColumnInfo(defaultValue = "0")
     val order: Int? = 0,
     @ColumnInfo(defaultValue = "0")
-    val speciesId: Int = 0,
-    @ColumnInfo(defaultValue = "0")
     val weight: Int = 0
 ) : BasePokemonEntity
 

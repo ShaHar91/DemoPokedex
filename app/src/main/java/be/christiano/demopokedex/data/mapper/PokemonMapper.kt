@@ -57,6 +57,5 @@ fun PokemonDto.toPokemonEntity() = PokemonEntity(
     height,
     is_default,
     order,
-    0, // TODO: only save the ID... get it from the url!!
-    weight,
+    weight
 )
