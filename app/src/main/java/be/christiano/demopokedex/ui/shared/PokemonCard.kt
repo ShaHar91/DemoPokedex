@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import be.christiano.demopokedex.domain.model.Pokemon
+import be.christiano.demopokedex.domain.model.Sprites
 import be.christiano.demopokedex.ui.theme.DemoPokedexTheme
 import coil.compose.AsyncImage
 
@@ -43,7 +44,7 @@ fun PokemonCard(
         ) {
             AsyncImage(
                 modifier = Modifier.size(50.dp),
-                model = pokemon.frontDefault,
+                model = pokemon.sprites.front_default,
                 contentDescription = "Image for ${pokemon.name}"
             )
 
@@ -79,6 +80,6 @@ fun PokemonCard(
 @Composable
 fun PokemonCardPreview() {
     DemoPokedexTheme {
-        PokemonCard(pokemon = Pokemon(1, "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png", "Bulbasaur", "Water", "Ghost"), modifier = Modifier.fillMaxWidth()) {}
+        PokemonCard(pokemon = Pokemon(1, Sprites(front_default = "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/1.png"), "Bulbasaur", "Water", "Ghost"), modifier = Modifier.fillMaxWidth()) {}
     }
 }

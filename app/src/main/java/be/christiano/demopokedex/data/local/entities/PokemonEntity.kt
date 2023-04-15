@@ -3,12 +3,13 @@ package be.christiano.demopokedex.data.local.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import be.christiano.demopokedex.domain.model.Sprites
 
 // The ColumnInfo with a default value was needed as long as the field was NOT-NULL... -.-'
 @Entity("pokemon")
 data class PokemonEntity(
     @PrimaryKey override val id: Long = 0L,
-    override val frontDefault: String = "",
+    override val sprites: Sprites = Sprites(),
     override val name: String = "",
     override val type1: String = "",
     override val type2: String? = null,
@@ -30,7 +31,7 @@ data class PokemonEntity(
 
 data class SimplePokemonEntity(
     override val id: Long = 0L,
-    override val frontDefault: String,
+    override val sprites: Sprites,
     override val name: String = "",
     override val type1: String = "",
     override val type2: String? = null
@@ -39,7 +40,7 @@ data class SimplePokemonEntity(
 
 interface BasePokemonEntity {
     val id: Long
-    val frontDefault: String
+    val sprites: Sprites
     val name: String
     val type1: String
     val type2: String?

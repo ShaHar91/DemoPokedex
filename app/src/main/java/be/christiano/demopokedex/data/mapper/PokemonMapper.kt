@@ -4,12 +4,25 @@ import be.christiano.demopokedex.data.local.entities.PokemonEntity
 import be.christiano.demopokedex.data.local.entities.SimplePokemonEntity
 import be.christiano.demopokedex.data.remote.dto.PokemonDto
 import be.christiano.demopokedex.data.remote.dto.PokemonSimpleDto
+import be.christiano.demopokedex.data.remote.dto.SpritesDto
 import be.christiano.demopokedex.domain.model.Pokemon
 import be.christiano.demopokedex.domain.model.PokemonDetail
+import be.christiano.demopokedex.domain.model.Sprites
+
+fun SpritesDto.toSprites() = Sprites(
+    back_default,
+    back_female,
+    back_shiny,
+    back_shiny_female,
+    front_default,
+    front_female,
+    front_shiny,
+    front_shiny_female
+)
 
 fun PokemonSimpleDto.toPokemonEntity() = SimplePokemonEntity(
     id,
-    sprites.front_default,
+    Sprites(front_default = sprites.front_default),
     name.replaceFirstChar { it.uppercaseChar() },
     types.find { it.slot == 1 }?.type?.name ?: "",
     types.find { it.slot == 2 }?.type?.name
@@ -17,15 +30,7 @@ fun PokemonSimpleDto.toPokemonEntity() = SimplePokemonEntity(
 
 fun SimplePokemonEntity.toPokemon() = Pokemon(
     id.toInt(),
-    frontDefault,
-    name,
-    type1,
-    type2
-)
-
-fun PokemonEntity.toPokemon() = Pokemon(
-    id.toInt(),
-    frontDefault,
+    sprites,
     name,
     type1,
     type2
@@ -33,7 +38,7 @@ fun PokemonEntity.toPokemon() = Pokemon(
 
 fun PokemonEntity.toPokemonDetail() = PokemonDetail(
     id.toInt(),
-    frontDefault,
+    sprites,
     name,
     type1,
     type2,
@@ -46,7 +51,7 @@ fun PokemonEntity.toPokemonDetail() = PokemonDetail(
 
 fun PokemonDto.toPokemonEntity() = PokemonEntity(
     id,
-    sprites.front_default,
+    sprites.toSprites(),
     name.replaceFirstChar { it.uppercaseChar() },
     types.find { it.slot == 1 }?.type?.name ?: "",
     types.find { it.slot == 2 }?.type?.name,

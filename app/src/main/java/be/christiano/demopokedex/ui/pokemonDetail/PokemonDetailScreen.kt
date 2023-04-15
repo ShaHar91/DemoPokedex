@@ -1,10 +1,8 @@
 package be.christiano.demopokedex.ui.pokemonDetail
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,14 +29,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import be.christiano.demopokedex.domain.model.PokemonDetail
+import be.christiano.demopokedex.domain.model.Sprites
 import be.christiano.demopokedex.domain.model.heightInMeters
 import be.christiano.demopokedex.domain.model.listOfAbilities
 import be.christiano.demopokedex.domain.model.weightInKg
@@ -122,14 +119,12 @@ fun PokemonDetailScreenContent(
                             modifier = Modifier
                                 .size(200.dp)
                                 .align(Alignment.CenterHorizontally),
-                            model = state.pokemon?.frontDefault,
+                            model = state.pokemon?.sprites?.front_default,
                             contentDescription = "Image for ${state.pokemon?.name}"
                         )
 
                         Section(modifier = Modifier.padding(horizontal = 16.dp), headerText = "About") {
-                            Row {
-                                Text(modifier = Modifier.fillMaxWidth(0.4f), text = "Type")
-
+                            SectionItem(labelText = "Type") {
                                 state.pokemon?.type1?.let {
                                     if (it.isBlank()) return@let
                                     TypeCard(type = Type.parseType(it))
@@ -144,31 +139,53 @@ fun PokemonDetailScreenContent(
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            Row {
-                                Text(modifier = Modifier.fillMaxWidth(0.4f), text = "Number")
+                            SectionItem(labelText = "Number") {
                                 Text(text = state.pokemon?.number?.toString() ?: "")
                             }
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            Row {
-                                Text(modifier = Modifier.fillMaxWidth(0.4f), text = "Hoogte")
+                            SectionItem(labelText = "Hoogte") {
                                 Text(text = state.pokemon?.heightInMeters() ?: "")
                             }
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            Row {
-                                Text(modifier = Modifier.fillMaxWidth(0.4f), text = "Gewicht")
+                            SectionItem(labelText = "Gewicht") {
                                 Text(text = state.pokemon?.weightInKg() ?: "")
                             }
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            Row {
-                                Text(modifier = Modifier.fillMaxWidth(0.4f), text = "Vaardigheden")
+                            SectionItem(labelText = "Vaardigheden") {
                                 Text(text = state.pokemon?.listOfAbilities()?.joinToString(", ") ?: "")
                             }
+                        }
+
+                        Spacer(modifier = Modifier.height(28.dp))
+
+                        Section(modifier = Modifier.padding(horizontal = 16.dp), headerText = "Statistics") {
+                            StatisticSectionItem(labelText = "HP", staticsLabel = "45", progress = 0.5f)
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            StatisticSectionItem(labelText = "Attack", staticsLabel = "45", progress = 0.5f)
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            StatisticSectionItem(labelText = "Defense", staticsLabel = "45", progress = 0.5f)
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            StatisticSectionItem(labelText = "Sp. Atk", staticsLabel = "45", progress = 0.5f)
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            StatisticSectionItem(labelText = "Sp. Def", staticsLabel = "45", progress = 0.5f)
+
+                            Spacer(modifier = Modifier.height(10.dp))
+
+                            StatisticSectionItem(labelText = "Speed", staticsLabel = "45", progress = 0.5f)
                         }
                     }
                 }
@@ -189,7 +206,7 @@ fun PokemonDetailScreenPreview() {
         PokemonDetailScreenContent(
             rememberNavController(),
             PokemonDetailState(
-                PokemonDetail(1, "", "Bulbasaur", "grass", "poison", "Overgrow", null, "Chlorophyl", 18, 20, "Seed")
+                PokemonDetail(1, Sprites(), "Bulbasaur", "grass", "poison", "Overgrow", null, "Chlorophyl", 18, 20, "Seed")
             )
         ) {}
     }

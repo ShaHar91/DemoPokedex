@@ -45,6 +45,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import be.christiano.demopokedex.R
 import be.christiano.demopokedex.domain.model.Pokemon
+import be.christiano.demopokedex.domain.model.Sprites
 import be.christiano.demopokedex.ui.MainNavGraph
 import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
 import be.christiano.demopokedex.ui.destinations.PokemonDetailScreenDestination
@@ -222,8 +223,8 @@ fun PokedexListScreenPreview() {
         PokedexListScreenContent(
             PokedexListState(
                 pokemons = listOf(
-                    Pokemon(1, "", "Bulbasaur", "grass", "poison"),
-                    Pokemon(3, "", "Charmander", "fire", null),
+                    Pokemon(1, Sprites(), "Bulbasaur", "grass", "poison"),
+                    Pokemon(3, Sprites(), "Charmander", "fire", null),
                 )
             ),
             rememberNavController()
