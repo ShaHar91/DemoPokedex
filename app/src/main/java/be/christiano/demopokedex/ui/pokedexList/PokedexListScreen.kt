@@ -48,6 +48,7 @@ import be.christiano.demopokedex.domain.model.Pokemon
 import be.christiano.demopokedex.domain.model.Sprites
 import be.christiano.demopokedex.ui.MainNavGraph
 import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
+import be.christiano.demopokedex.ui.destinations.FavoritesScreenDestination
 import be.christiano.demopokedex.ui.destinations.PokemonDetailScreenDestination
 import be.christiano.demopokedex.ui.shared.PokemonCard
 import be.christiano.demopokedex.ui.theme.DemoPokedexTheme
@@ -175,15 +176,13 @@ fun PokedexListScreenContent(
                                     .weight(1f)
                                     .height(100.dp),
                                 title = "Favorieten",
-                                subTitle = "0 pokemons",
+                                subTitle = "${state.amountOfFavoritePokemons} pokemons",
                                 gradientColors = listOf(
                                     Color(0xFF65CB9A),
                                     Color(0xFF15D0DC)
                                 )
                             ) {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Favorites!")
-                                }
+                                navController.navigate(FavoritesScreenDestination())
                             }
                         }
 

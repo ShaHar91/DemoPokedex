@@ -7,6 +7,7 @@ import androidx.room.Upsert
 import be.christiano.demopokedex.data.local.entities.DetailedPokemonEntity
 import be.christiano.demopokedex.data.local.entities.PokemonEntity
 import be.christiano.demopokedex.data.local.entities.SimplePokemonEntity
+import be.christiano.demopokedex.domain.model.Pokemon
 import be.christiano.demopokedex.domain.model.PokemonInTeam
 import be.christiano.demopokedex.domain.model.PokemonIsFavorite
 import kotlinx.coroutines.flow.Flow
@@ -39,4 +40,10 @@ interface PokemonDao {
 
     @Upsert(PokemonEntity::class)
     suspend fun upsertPokemonInTeam(pokemonIsInTeam: PokemonInTeam)
+
+    @Query("SELECT COUNT() FROM pokemon WHERE isFavorite = 1")
+    fun findAmountOfFavoritesFlow(): Flow<Int>
+
+    @Query("SELECT * FROM pokemon WHERE isFavorite = 1")
+    fun findFavoritesFlow(): Flow<List<SimplePokemonEntity>>
 }

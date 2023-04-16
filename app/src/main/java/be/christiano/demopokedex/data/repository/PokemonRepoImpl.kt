@@ -5,6 +5,7 @@ import be.christiano.demopokedex.data.mapper.toDetailedPokemonEntity
 import be.christiano.demopokedex.data.mapper.toPokemon
 import be.christiano.demopokedex.data.mapper.toPokemonDetail
 import be.christiano.demopokedex.data.remote.PokemonApi
+import be.christiano.demopokedex.domain.model.Pokemon
 import be.christiano.demopokedex.domain.model.PokemonIsFavorite
 import be.christiano.demopokedex.domain.repository.PokemonRepo
 import be.christiano.demopokedex.util.Resource
@@ -21,6 +22,10 @@ class PokemonRepoImpl(
 
     private val dao = db.dao
     override fun findPokemons(query: String) = dao.findAllFlow(query).map { it.map { entity -> entity.toPokemon() } }
+
+    override fun findAmountOfFavoritesFlow() = dao.findAmountOfFavoritesFlow()
+
+    override fun findFavoritesFlow() = dao.findFavoritesFlow().map { it.map { entity -> entity.toPokemon() } }
 
     override fun findPokemonByIdFlow(id: Int) = dao.findByIdFlow(id.toLong()).map { it?.toPokemonDetail() }
 

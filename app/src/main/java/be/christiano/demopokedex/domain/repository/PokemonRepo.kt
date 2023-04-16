@@ -9,6 +9,10 @@ interface PokemonRepo {
 
     fun findPokemons(query: String): Flow<List<Pokemon>>
 
+    fun findAmountOfFavoritesFlow(): Flow<Int>
+
+    fun findFavoritesFlow(): Flow<List<Pokemon>>
+
     fun findPokemonByIdFlow(id: Int): Flow<PokemonDetail?>
 
     suspend fun fetchPokemons(): Flow<Resource<Unit>>

@@ -29,8 +29,12 @@ class PokedexListViewModel(
 
         state.map { it.searchQuery }.debounce { if (it.isNotBlank()) 500 else 0 }.flatMapLatest {
             repository.findPokemons(it)
-        }.onEach {list->
+        }.onEach { list ->
             state.update { it.copy(pokemons = list) }
+        }.launchIn(viewModelScope)
+
+        repository.findAmountOfFavoritesFlow().onEach { amount ->
+            state.update { it.copy(amountOfFavoritePokemons = amount) }
         }.launchIn(viewModelScope)
     }
 
