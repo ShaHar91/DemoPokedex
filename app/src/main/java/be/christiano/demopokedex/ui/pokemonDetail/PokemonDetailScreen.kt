@@ -13,7 +13,8 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.FavoriteBorder
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -30,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
-import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -90,9 +90,12 @@ fun PokemonDetailScreenContent(
                 .fillMaxSize(),
             topBar = {
                 MyLargeTopAppBar(state.pokemon?.name ?: "", navController = navController, behavior = { behavior }) {
-                    IconButton(onClick = { }) {
-                        //TODO: add a difference when the pokemon is favorite or not!
-                        Icon(Icons.Outlined.FavoriteBorder, contentDescription = "Favorite this pokemon")
+                    IconButton(onClick = { onEvent(PokemonDetailEvent.LikeUnlike) }) {
+                        if (state.pokemon?.isFavorite == true) {
+                            Icon(Icons.Filled.Favorite, contentDescription = "Unfavorite this pokemon")
+                        } else {
+                            Icon(Icons.Filled.FavoriteBorder, contentDescription = "Favorite this pokemon")
+                        }
                     }
                 }
             },
@@ -207,7 +210,7 @@ fun PokemonDetailScreenPreview() {
         PokemonDetailScreenContent(
             rememberNavController(),
             PokemonDetailState(
-                PokemonDetail(1, Sprites(), "Bulbasaur", "grass", "poison", "Overgrow", null, "Chlorophyl", 18, 20, listOf(45, 60, 48, 65, 65, 45))
+                PokemonDetail(1, Sprites(), "Bulbasaur", "grass", "poison", "Overgrow", null, "Chlorophyl", 18, 20, listOf(45, 60, 48, 65, 65, 45), isFavorite = true)
             )
         ) {}
     }

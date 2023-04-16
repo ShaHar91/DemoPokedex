@@ -1,5 +1,6 @@
 package be.christiano.demopokedex.data.mapper
 
+import be.christiano.demopokedex.data.local.entities.DetailedPokemonEntity
 import be.christiano.demopokedex.data.local.entities.PokemonEntity
 import be.christiano.demopokedex.data.local.entities.SimplePokemonEntity
 import be.christiano.demopokedex.data.remote.dto.PokemonDto
@@ -20,7 +21,7 @@ fun SpritesDto.toSprites() = Sprites(
     front_shiny_female
 )
 
-fun PokemonSimpleDto.toPokemonEntity() = SimplePokemonEntity(
+fun PokemonSimpleDto.toDetailedPokemonEntity() = SimplePokemonEntity(
     id,
     Sprites(front_default = sprites.front_default),
     name.replaceFirstChar { it.uppercaseChar() },
@@ -30,7 +31,7 @@ fun PokemonSimpleDto.toPokemonEntity() = SimplePokemonEntity(
 
 fun SimplePokemonEntity.toPokemon() = Pokemon(
     id.toInt(),
-    sprites,
+    sprites ?: Sprites(),
     name,
     type1,
     type2
@@ -38,7 +39,7 @@ fun SimplePokemonEntity.toPokemon() = Pokemon(
 
 fun PokemonEntity.toPokemonDetail() = PokemonDetail(
     id.toInt(),
-    sprites,
+    sprites ?: Sprites(),
     name,
     type1,
     type2,
@@ -47,10 +48,12 @@ fun PokemonEntity.toPokemonDetail() = PokemonDetail(
     abilityHidden,
     height,
     weight,
-    stats
+    stats,
+    isInTeam,
+    isFavorite
 )
 
-fun PokemonDto.toPokemonEntity() = PokemonEntity(
+fun PokemonDto.toDetailedPokemonEntity() = DetailedPokemonEntity(
     id,
     sprites.toSprites(),
     name.replaceFirstChar { it.uppercaseChar() },

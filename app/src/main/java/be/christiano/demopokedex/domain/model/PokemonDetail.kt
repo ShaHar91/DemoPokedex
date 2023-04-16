@@ -16,7 +16,19 @@ data class PokemonDetail(
     val abilityHidden: String? = null,
     val height: Int = 0,
     val weight: Int = 0,
-    val stats: List<Int> = emptyList()
+    val stats: List<Int> = emptyList(),
+    val isInTeam: Boolean = false,
+    val isFavorite: Boolean = false
+)
+
+data class PokemonIsFavorite(
+    val id: Long = 0,
+    val isFavorite: Boolean = false
+)
+
+data class PokemonInTeam(
+    val id: Long = 0,
+    val isInTeam: Boolean = false
 )
 
 fun PokemonDetail.listOfAbilities() = listOfNotNull(ability1, ability2, abilityHidden)

@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import be.christiano.demopokedex.domain.model.Pokemon
 import be.christiano.demopokedex.domain.model.PokemonDetail
 import be.christiano.demopokedex.domain.repository.PokemonRepo
 import be.christiano.demopokedex.util.Resource
@@ -35,7 +34,14 @@ class PokemonDetailViewModel(
         when (event) {
             PokemonDetailEvent.Refresh -> getPokemonDetail()
             PokemonDetailEvent.AddToTeam -> Unit
-            PokemonDetailEvent.LikeUnlike -> Unit
+            PokemonDetailEvent.LikeUnlike -> updateFavoritePokemon()
+        }
+    }
+
+    private fun updateFavoritePokemon() {
+        viewModelScope.launch {
+            val pok = state.value.pokemon ?: return@launch
+            repository.updateFavoritePokemon(pok.number, !pok.isFavorite)
         }
     }
 

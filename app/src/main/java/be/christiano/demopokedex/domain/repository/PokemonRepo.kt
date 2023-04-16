@@ -7,11 +7,13 @@ import kotlinx.coroutines.flow.Flow
 
 interface PokemonRepo {
 
-    fun findPokemons(query: String) : Flow<List<Pokemon>>
+    fun findPokemons(query: String): Flow<List<Pokemon>>
 
     fun findPokemonByIdFlow(id: Int): Flow<PokemonDetail?>
 
     suspend fun fetchPokemons(): Flow<Resource<Unit>>
 
-    suspend fun fetchPokemon(id:Long): Flow<Resource<Unit>>
+    suspend fun fetchPokemon(id: Long): Flow<Resource<Unit>>
+
+    suspend fun updateFavoritePokemon(id: Int, isFavorite: Boolean)
 }
