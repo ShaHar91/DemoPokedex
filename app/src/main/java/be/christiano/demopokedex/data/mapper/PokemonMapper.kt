@@ -46,7 +46,8 @@ fun PokemonEntity.toPokemonDetail() = PokemonDetail(
     ability2,
     abilityHidden,
     height,
-    weight
+    weight,
+    stats
 )
 
 fun PokemonDto.toPokemonEntity() = PokemonEntity(
@@ -62,5 +63,13 @@ fun PokemonDto.toPokemonEntity() = PokemonEntity(
     height,
     is_default,
     order,
-    weight
+    weight,
+    listOf(
+        stats[0].base_stat,
+        stats[1].base_stat,
+        stats[2].base_stat,
+        stats[3].base_stat,
+        stats[4].base_stat,
+        stats[5].base_stat
+    )
 )

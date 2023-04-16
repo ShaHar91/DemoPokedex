@@ -30,6 +30,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.tooling.preview.Devices
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -165,27 +166,27 @@ fun PokemonDetailScreenContent(
                         Spacer(modifier = Modifier.height(28.dp))
 
                         Section(modifier = Modifier.padding(horizontal = 16.dp), headerText = "Statistics") {
-                            StatisticSectionItem(labelText = "HP", staticsLabel = "45", progress = 0.5f)
+                            StatisticSectionItem(labelText = "HP", staticsLabel = state.pokemon?.stats?.getOrNull(0).toString(), progress = state.pokemon?.stats?.getOrNull(0)?.div(200f) ?: 0f)
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            StatisticSectionItem(labelText = "Attack", staticsLabel = "45", progress = 0.5f)
+                            StatisticSectionItem(labelText = "Attack", staticsLabel = state.pokemon?.stats?.getOrNull(1).toString(), progress = state.pokemon?.stats?.getOrNull(1)?.div(200f) ?: 0f)
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            StatisticSectionItem(labelText = "Defense", staticsLabel = "45", progress = 0.5f)
+                            StatisticSectionItem(labelText = "Defense", staticsLabel = state.pokemon?.stats?.getOrNull(2).toString(), progress = state.pokemon?.stats?.getOrNull(2)?.div(200f) ?: 0f)
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            StatisticSectionItem(labelText = "Sp. Atk", staticsLabel = "45", progress = 0.5f)
+                            StatisticSectionItem(labelText = "Sp. Atk", staticsLabel = state.pokemon?.stats?.getOrNull(3).toString(), progress = state.pokemon?.stats?.getOrNull(3)?.div(200f) ?: 0f)
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            StatisticSectionItem(labelText = "Sp. Def", staticsLabel = "45", progress = 0.5f)
+                            StatisticSectionItem(labelText = "Sp. Def", staticsLabel = state.pokemon?.stats?.getOrNull(4).toString(), progress = state.pokemon?.stats?.getOrNull(4)?.div(200f) ?: 0f)
 
                             Spacer(modifier = Modifier.height(10.dp))
 
-                            StatisticSectionItem(labelText = "Speed", staticsLabel = "45", progress = 0.5f)
+                            StatisticSectionItem(labelText = "Speed", staticsLabel = state.pokemon?.stats?.getOrNull(5).toString(), progress = state.pokemon?.stats?.getOrNull(5)?.div(200f) ?: 0f)
                         }
                     }
                 }
@@ -206,7 +207,7 @@ fun PokemonDetailScreenPreview() {
         PokemonDetailScreenContent(
             rememberNavController(),
             PokemonDetailState(
-                PokemonDetail(1, Sprites(), "Bulbasaur", "grass", "poison", "Overgrow", null, "Chlorophyl", 18, 20, "Seed")
+                PokemonDetail(1, Sprites(), "Bulbasaur", "grass", "poison", "Overgrow", null, "Chlorophyl", 18, 20, listOf(45, 60, 48, 65, 65, 45))
             )
         ) {}
     }

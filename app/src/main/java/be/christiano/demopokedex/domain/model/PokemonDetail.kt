@@ -16,7 +16,7 @@ data class PokemonDetail(
     val abilityHidden: String? = null,
     val height: Int = 0,
     val weight: Int = 0,
-    val species: String = ""
+    val stats: List<Int> = emptyList()
 )
 
 fun PokemonDetail.listOfAbilities() = listOfNotNull(ability1, ability2, abilityHidden)
@@ -39,3 +39,8 @@ data class Sprites(
     val front_shiny: String? = null,
     val front_shiny_female: String? = null
 )
+
+//data class StatItem(
+//    val value: Int = 0,
+//    val identifier: String = ""
+//)

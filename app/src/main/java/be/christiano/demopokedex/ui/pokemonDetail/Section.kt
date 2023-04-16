@@ -20,7 +20,7 @@ fun Section(modifier: Modifier = Modifier, headerText: String, content: @Composa
     Column(modifier = modifier.fillMaxWidth()) {
         Text(text = headerText)
 
-        Spacer(modifier = Modifier.height(6.dp))
+        Spacer(modifier = Modifier.height(10.dp))
 
         ElevatedCard(
             modifier = Modifier
