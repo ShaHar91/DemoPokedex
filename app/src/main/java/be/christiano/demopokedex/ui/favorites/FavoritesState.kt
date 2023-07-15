@@ -1,4 +1,7 @@
 package be.christiano.demopokedex.ui.favorites
 
-class FavoritesState {
-}
+import be.christiano.demopokedex.domain.model.Pokemon
+
+data class FavoritesState(
+    val favoritePokemons: List<Pokemon> = emptyList()
+)

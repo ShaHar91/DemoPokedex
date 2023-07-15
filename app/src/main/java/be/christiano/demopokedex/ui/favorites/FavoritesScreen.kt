@@ -12,6 +12,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -19,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
-import be.christiano.demopokedex.domain.model.Pokemon
 import be.christiano.demopokedex.ui.MainNavGraph
 import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
 import be.christiano.demopokedex.ui.destinations.PokemonDetailScreenDestination
@@ -36,8 +37,9 @@ fun FavoritesScreen(
     navController: NavController
 ) {
     val viewModel = koinViewModel<FavoritesViewModel>()
+    val state by viewModel.state.collectAsState()
 
-    FavoritesScreenContent(state = FavoritesState(), navController = navController)
+    FavoritesScreenContent(state = state, navController = navController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,7 +50,10 @@ fun FavoritesScreenContent(
 ) {
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    Box(contentAlignment = Alignment.BottomCenter) {
+    Box(
+        modifier = Modifier,
+        contentAlignment = Alignment.BottomCenter
+    ) {
         Scaffold(
             Modifier
                 .nestedScroll(behavior.nestedScrollConnection)
@@ -63,12 +68,14 @@ fun FavoritesScreenContent(
                     .fillMaxSize()
                     .padding(contentPadding)
             ) {
+//                if (state.favoritePokemons.isEmpty()) return@Scaffold
+
                 LazyColumn(
                     modifier = Modifier
                         .fillMaxSize()
                         .padding(top = 10.dp, start = 16.dp, end = 16.dp)
                 ) {
-                    itemsIndexed(emptyList<Pokemon>()) { index, pokemon ->
+                    itemsIndexed(state.favoritePokemons) { index, pokemon ->
                         if (index == 0) {
                             Spacer(modifier = Modifier.height(6.dp))
                         }

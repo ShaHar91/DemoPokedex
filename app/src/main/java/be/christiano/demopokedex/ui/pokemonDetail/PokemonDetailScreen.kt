@@ -102,95 +102,90 @@ fun PokemonDetailScreenContent(
             snackbarHost = { SnackbarHost(snackbarHostState) }
         ) { contentPadding ->
 
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(contentPadding)
-            ) {
+            SwipeRefresh(modifier = Modifier
+                .fillMaxSize()
+                .padding(contentPadding), state = swipeRefreshState, onRefresh = {
+                onEvent(PokemonDetailEvent.Refresh)
+            }) {
 
-                SwipeRefresh(state = swipeRefreshState, onRefresh = {
-                    onEvent(PokemonDetailEvent.Refresh)
-                }) {
+                Column(
+                    Modifier
+                        .fillMaxSize()
+                        .verticalScroll(scrollState)
+                        .padding(vertical = 8.dp)
+                ) {
 
-                    Column(
-                        Modifier
-                            .fillMaxSize()
-                            .verticalScroll(scrollState)
-                            .padding(vertical = 8.dp)
-                    ) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .size(200.dp)
+                            .align(Alignment.CenterHorizontally),
+                        model = state.pokemon?.sprites?.front_default,
+                        contentDescription = "Image for ${state.pokemon?.name}"
+                    )
 
-                        AsyncImage(
-                            modifier = Modifier
-                                .size(200.dp)
-                                .align(Alignment.CenterHorizontally),
-                            model = state.pokemon?.sprites?.front_default,
-                            contentDescription = "Image for ${state.pokemon?.name}"
-                        )
-
-                        Section(modifier = Modifier.padding(horizontal = 16.dp), headerText = "About") {
-                            SectionItem(labelText = "Type") {
-                                state.pokemon?.type1?.let {
-                                    if (it.isBlank()) return@let
-                                    TypeCard(type = Type.parseType(it))
-                                }
-                                state.pokemon?.type2?.let {
-                                    if (it.isBlank()) return@let
-                                    Spacer(modifier = Modifier.width(6.dp))
-
-                                    TypeCard(type = Type.parseType(it))
-                                }
+                    Section(modifier = Modifier.padding(horizontal = 16.dp), headerText = "About") {
+                        SectionItem(labelText = "Type") {
+                            state.pokemon?.type1?.let {
+                                if (it.isBlank()) return@let
+                                TypeCard(type = Type.parseType(it))
                             }
+                            state.pokemon?.type2?.let {
+                                if (it.isBlank()) return@let
+                                Spacer(modifier = Modifier.width(6.dp))
 
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            SectionItem(labelText = "Number") {
-                                Text(text = state.pokemon?.number?.toString() ?: "")
-                            }
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            SectionItem(labelText = "Hoogte") {
-                                Text(text = state.pokemon?.heightInMeters() ?: "")
-                            }
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            SectionItem(labelText = "Gewicht") {
-                                Text(text = state.pokemon?.weightInKg() ?: "")
-                            }
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            SectionItem(labelText = "Vaardigheden") {
-                                Text(text = state.pokemon?.listOfAbilities()?.joinToString(", ") ?: "")
+                                TypeCard(type = Type.parseType(it))
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(28.dp))
+                        Spacer(modifier = Modifier.height(10.dp))
 
-                        Section(modifier = Modifier.padding(horizontal = 16.dp), headerText = "Statistics") {
-                            StatisticSectionItem(labelText = "HP", staticsLabel = state.pokemon?.stats?.getOrNull(0).toString(), progress = state.pokemon?.stats?.getOrNull(0)?.div(200f) ?: 0f)
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            StatisticSectionItem(labelText = "Attack", staticsLabel = state.pokemon?.stats?.getOrNull(1).toString(), progress = state.pokemon?.stats?.getOrNull(1)?.div(200f) ?: 0f)
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            StatisticSectionItem(labelText = "Defense", staticsLabel = state.pokemon?.stats?.getOrNull(2).toString(), progress = state.pokemon?.stats?.getOrNull(2)?.div(200f) ?: 0f)
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            StatisticSectionItem(labelText = "Sp. Atk", staticsLabel = state.pokemon?.stats?.getOrNull(3).toString(), progress = state.pokemon?.stats?.getOrNull(3)?.div(200f) ?: 0f)
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            StatisticSectionItem(labelText = "Sp. Def", staticsLabel = state.pokemon?.stats?.getOrNull(4).toString(), progress = state.pokemon?.stats?.getOrNull(4)?.div(200f) ?: 0f)
-
-                            Spacer(modifier = Modifier.height(10.dp))
-
-                            StatisticSectionItem(labelText = "Speed", staticsLabel = state.pokemon?.stats?.getOrNull(5).toString(), progress = state.pokemon?.stats?.getOrNull(5)?.div(200f) ?: 0f)
+                        SectionItem(labelText = "Number") {
+                            Text(text = state.pokemon?.number?.toString() ?: "")
                         }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        SectionItem(labelText = "Hoogte") {
+                            Text(text = state.pokemon?.heightInMeters() ?: "")
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        SectionItem(labelText = "Gewicht") {
+                            Text(text = state.pokemon?.weightInKg() ?: "")
+                        }
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        SectionItem(labelText = "Vaardigheden") {
+                            Text(text = state.pokemon?.listOfAbilities()?.joinToString(", ") ?: "")
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(28.dp))
+
+                    Section(modifier = Modifier.padding(horizontal = 16.dp), headerText = "Statistics") {
+                        StatisticSectionItem(labelText = "HP", staticsLabel = state.pokemon?.stats?.getOrNull(0).toString(), progress = state.pokemon?.stats?.getOrNull(0)?.div(200f) ?: 0f)
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        StatisticSectionItem(labelText = "Attack", staticsLabel = state.pokemon?.stats?.getOrNull(1).toString(), progress = state.pokemon?.stats?.getOrNull(1)?.div(200f) ?: 0f)
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        StatisticSectionItem(labelText = "Defense", staticsLabel = state.pokemon?.stats?.getOrNull(2).toString(), progress = state.pokemon?.stats?.getOrNull(2)?.div(200f) ?: 0f)
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        StatisticSectionItem(labelText = "Sp. Atk", staticsLabel = state.pokemon?.stats?.getOrNull(3).toString(), progress = state.pokemon?.stats?.getOrNull(3)?.div(200f) ?: 0f)
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        StatisticSectionItem(labelText = "Sp. Def", staticsLabel = state.pokemon?.stats?.getOrNull(4).toString(), progress = state.pokemon?.stats?.getOrNull(4)?.div(200f) ?: 0f)
+
+                        Spacer(modifier = Modifier.height(10.dp))
+
+                        StatisticSectionItem(labelText = "Speed", staticsLabel = state.pokemon?.stats?.getOrNull(5).toString(), progress = state.pokemon?.stats?.getOrNull(5)?.div(200f) ?: 0f)
                     }
                 }
             }
