@@ -17,16 +17,6 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 
-//private val DarkColorScheme = darkColorScheme(
-//    primary = EerieBlack,
-//    secondary = EerieBlack,
-//    tertiary = EerieBlack,
-//    background = EerieBlack,
-//    surface = EerieBlack,
-//    primaryContainer = EerieBlack,
-//    secondaryContainer = EerieBlack
-//)
-
 // Cheat sheet about all the colors and components
 // https://medium.com/@daniel.atitienei/material-design-3-in-jetpack-compose-cheat-sheet-b5dd426c10e
 
