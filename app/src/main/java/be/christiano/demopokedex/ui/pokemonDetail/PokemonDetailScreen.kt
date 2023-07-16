@@ -136,6 +136,7 @@ fun PokemonDetailScreenContent(
                                 TypeCard(type = Type.parseType(it))
                             }
                         }
+                        
 
                         Spacer(modifier = Modifier.height(10.dp))
 
