@@ -46,4 +46,10 @@ interface PokemonDao {
 
     @Query("SELECT * FROM pokemon WHERE isFavorite = 1")
     fun findFavoritesFlow(): Flow<List<SimplePokemonEntity>>
+
+    @Query("SELECT COUNT() FROM pokemon WHERE isInTeam = 1")
+    fun findAmountOfPokemonsInTeamFlow(): Flow<Int>
+
+    @Query("SELECT * FROM pokemon WHERE isInTeam = 1")
+    fun findTeamPokemonsFlow(): Flow<List<SimplePokemonEntity>>
 }

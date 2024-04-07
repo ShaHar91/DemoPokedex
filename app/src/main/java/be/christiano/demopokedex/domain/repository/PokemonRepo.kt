@@ -13,11 +13,16 @@ interface PokemonRepo {
 
     fun findFavoritesFlow(): Flow<List<Pokemon>>
 
+    fun findAmountOfPokemonsInTeamFlow(): Flow<Int>
+
+    fun findTeamPokemonsFlow(): Flow<List<Pokemon>>
+
     fun findPokemonByIdFlow(id: Int): Flow<PokemonDetail?>
 
-    suspend fun fetchPokemons(): Flow<Resource<Unit>>
+    fun fetchPokemons(): Flow<Resource<Unit>>
 
-    suspend fun fetchPokemon(id: Long): Flow<Resource<Unit>>
+    fun fetchPokemon(id: Long): Flow<Resource<Unit>>
 
     suspend fun updateFavoritePokemon(id: Int, isFavorite: Boolean)
+    suspend fun updateInTeam(id: Int, isInTeam: Boolean)
 }

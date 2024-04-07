@@ -15,6 +15,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -136,7 +137,7 @@ fun PokemonDetailScreenContent(
                                 TypeCard(type = Type.parseType(it))
                             }
                         }
-                        
+
 
                         Spacer(modifier = Modifier.height(10.dp))
 
@@ -190,6 +191,18 @@ fun PokemonDetailScreenContent(
                     }
                 }
             }
+        }
+
+        Button(
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            onClick = {
+                if (state.pokemon?.isInTeam == true) {
+                    onEvent(PokemonDetailEvent.RemoveFromTeam)
+                } else {
+                    onEvent(PokemonDetailEvent.AddToTeam)
+                }
+            }) {
+            Text(text = if (state.pokemon?.isInTeam == true) "Remove from team" else "Add to team")
         }
 
         if (state.isLoading) {

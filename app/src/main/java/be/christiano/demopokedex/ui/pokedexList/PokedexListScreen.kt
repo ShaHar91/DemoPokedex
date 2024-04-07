@@ -50,6 +50,7 @@ import be.christiano.demopokedex.ui.MainNavGraph
 import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
 import be.christiano.demopokedex.ui.destinations.FavoritesScreenDestination
 import be.christiano.demopokedex.ui.destinations.PokemonDetailScreenDestination
+import be.christiano.demopokedex.ui.destinations.TeamScreenDestination
 import be.christiano.demopokedex.ui.shared.PokemonCard
 import be.christiano.demopokedex.ui.theme.DemoPokedexTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
@@ -158,15 +159,13 @@ fun PokedexListScreenContent(
                                     .weight(1f)
                                     .height(100.dp),
                                 title = "Mijn team",
-                                subTitle = "0 pokemons",
+                                subTitle = "${state.amountOfPokemonsInTeam} pokemons",
                                 gradientColors = listOf(
                                     Color(0xFF46469C),
                                     Color(0xFF7E32E0)
                                 )
                             ) {
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("My team!")
-                                }
+                                navController.navigate(TeamScreenDestination())
                             }
 
                             Spacer(modifier = Modifier.width(10.dp))

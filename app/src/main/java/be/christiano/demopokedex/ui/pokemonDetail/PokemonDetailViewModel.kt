@@ -33,8 +33,16 @@ class PokemonDetailViewModel(
     fun onEvent(event: PokemonDetailEvent) {
         when (event) {
             PokemonDetailEvent.Refresh -> getPokemonDetail()
-            PokemonDetailEvent.AddToTeam -> Unit
             PokemonDetailEvent.LikeUnlike -> updateFavoritePokemon()
+            PokemonDetailEvent.AddToTeam -> updateInTeam(true)
+            PokemonDetailEvent.RemoveFromTeam -> updateInTeam(false)
+        }
+    }
+
+    private fun updateInTeam(isInTeam: Boolean) {
+        viewModelScope.launch {
+            val pok = state.value.pokemon ?: return@launch
+            repository.updateInTeam(pok.number, isInTeam)
         }
     }
 

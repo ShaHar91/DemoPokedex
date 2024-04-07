@@ -5,7 +5,7 @@ import be.christiano.demopokedex.data.mapper.toDetailedPokemonEntity
 import be.christiano.demopokedex.data.mapper.toPokemon
 import be.christiano.demopokedex.data.mapper.toPokemonDetail
 import be.christiano.demopokedex.data.remote.PokemonApi
-import be.christiano.demopokedex.domain.model.Pokemon
+import be.christiano.demopokedex.domain.model.PokemonInTeam
 import be.christiano.demopokedex.domain.model.PokemonIsFavorite
 import be.christiano.demopokedex.domain.repository.PokemonRepo
 import be.christiano.demopokedex.util.Resource
@@ -27,9 +27,13 @@ class PokemonRepoImpl(
 
     override fun findFavoritesFlow() = dao.findFavoritesFlow().map { it.map { entity -> entity.toPokemon() } }
 
+    override fun findAmountOfPokemonsInTeamFlow() = dao.findAmountOfPokemonsInTeamFlow()
+
+    override fun findTeamPokemonsFlow() = dao.findTeamPokemonsFlow().map { it.map { entity -> entity.toPokemon() } }
+
     override fun findPokemonByIdFlow(id: Int) = dao.findByIdFlow(id.toLong()).map { it?.toPokemonDetail() }
 
-    override suspend fun fetchPokemons(): Flow<Resource<Unit>> {
+    override fun fetchPokemons(): Flow<Resource<Unit>> {
         return flow {
             emit(Resource.Loading(true))
 
@@ -55,7 +59,7 @@ class PokemonRepoImpl(
         }
     }
 
-    override suspend fun fetchPokemon(id: Long): Flow<Resource<Unit>> {
+    override fun fetchPokemon(id: Long): Flow<Resource<Unit>> {
         return flow {
             emit(Resource.Loading(true))
 
@@ -81,5 +85,9 @@ class PokemonRepoImpl(
 
     override suspend fun updateFavoritePokemon(id: Int, isFavorite: Boolean) {
         dao.upsertPokemonFavorite(PokemonIsFavorite(id.toLong(), isFavorite))
+    }
+
+    override suspend fun updateInTeam(id: Int, isInTeam: Boolean) {
+        dao.upsertPokemonInTeam(PokemonInTeam(id.toLong(), isInTeam))
     }
 }

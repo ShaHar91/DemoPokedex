@@ -1,4 +1,4 @@
-package be.christiano.demopokedex.ui.favorites
+package be.christiano.demopokedex.ui.team
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.KeyboardArrowRight
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -21,6 +23,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.res.vectorResource
@@ -43,19 +46,19 @@ import org.koin.androidx.compose.koinViewModel
 @Composable
 @Destination
 @MainNavGraph
-fun FavoritesScreen(
+fun TeamScreen(
     navController: NavController
 ) {
-    val viewModel = koinViewModel<FavoritesViewModel>()
+    val viewModel = koinViewModel<TeamViewModel>()
     val state by viewModel.state.collectAsState()
 
-    FavoritesScreenContent(state = state, navController = navController)
+    TeamScreenContent(state = state, navController = navController)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun FavoritesScreenContent(
-    state: FavoritesState,
+fun TeamScreenContent(
+    state: TeamState,
     navController: NavController
 ) {
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
@@ -69,7 +72,7 @@ fun FavoritesScreenContent(
                 .nestedScroll(behavior.nestedScrollConnection)
                 .fillMaxSize(),
             topBar = {
-                MyLargeTopAppBar("Favorieten", navController, behavior = { behavior })
+                MyLargeTopAppBar("Mijn team", navController, behavior = { behavior })
             }
         ) { contentPadding ->
 
@@ -79,10 +82,10 @@ fun FavoritesScreenContent(
                     .padding(contentPadding),
                 contentAlignment = Alignment.Center
             ) {
-                if (state.favoritePokemons.isEmpty()) {
+                if (state.teamPokemons.isEmpty()) {
                     NoTeamPokemons()
                 } else {
-                    ListOfFavoritePokemons(navController = navController, state = state)
+                    ListOfTeamPokemons(navController = navController, state = state)
                 }
             }
         }
@@ -108,7 +111,7 @@ fun NoTeamPokemons() {
             modifier = Modifier,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-            text = "No pokemons as favorite yet"
+            text = "No pokemons in your team yet"
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -116,22 +119,22 @@ fun NoTeamPokemons() {
         Text(
             modifier = Modifier,
             textAlign = TextAlign.Center,
-            text = "Go to a pokemon's detail to add it as a favorite!"
+            text = "Go to a pokemon's detail to add it to your team!"
         )
     }
 }
 
 @Composable
-fun ListOfFavoritePokemons(
+fun ListOfTeamPokemons(
     navController: NavController,
-    state: FavoritesState
+    state: TeamState
 ) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = 10.dp, start = 16.dp, end = 16.dp)
     ) {
-        itemsIndexed(state.favoritePokemons) { index, pokemon ->
+        itemsIndexed(state.teamPokemons) { index, pokemon ->
             if (index == 0) {
                 Spacer(modifier = Modifier.height(6.dp))
             }
@@ -147,8 +150,8 @@ fun ListOfFavoritePokemons(
 
 @Preview
 @Composable
-fun FavoritesScreenPreview() {
+fun TeamScreenPreview() {
     DemoPokedexTheme {
-        FavoritesScreenContent(state = FavoritesState(), navController = rememberNavController())
+        TeamScreenContent(state = TeamState(), navController = rememberNavController())
     }
 }

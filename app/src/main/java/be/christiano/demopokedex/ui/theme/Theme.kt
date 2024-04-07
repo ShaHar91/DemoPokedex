@@ -115,6 +115,7 @@ fun DemoPokedexTheme(
             (view.context as Activity).window.statusBarColor = colorScheme.background.toArgb()
             (view.context as Activity).window.navigationBarColor = colorScheme.background.toArgb()
             ViewCompat.getWindowInsetsController(view)?.isAppearanceLightStatusBars = !darkTheme
+            ViewCompat.getWindowInsetsController(view)?.isAppearanceLightNavigationBars = !darkTheme
         }
     }
 

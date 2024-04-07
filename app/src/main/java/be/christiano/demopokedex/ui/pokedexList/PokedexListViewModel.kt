@@ -36,6 +36,10 @@ class PokedexListViewModel(
         repository.findAmountOfFavoritesFlow().onEach { amount ->
             state.update { it.copy(amountOfFavoritePokemons = amount) }
         }.launchIn(viewModelScope)
+
+        repository.findAmountOfPokemonsInTeamFlow().onEach { amount ->
+            state.update { it.copy(amountOfPokemonsInTeam = amount) }
+        }.launchIn(viewModelScope)
     }
 
     fun onEvent(event: PokedexListEvent) {
@@ -44,24 +48,24 @@ class PokedexListViewModel(
             is PokedexListEvent.OnSearchQueryChanged -> {
                 state.update { it.copy(searchQuery = event.query) }
             }
-            PokedexListEvent.ToggleOrderSection -> {}
+
+            PokedexListEvent.ToggleOrderSection -> Unit
         }
     }
 
-    private fun getPokemons() {
-        viewModelScope.launch {
-            repository.fetchPokemons()
-                .collect { result ->
-                    when (result) {
-                        is Resource.Error -> {
-                            coroutineException = result.message
-                        }
-                        is Resource.Loading -> {
-                            state.update { it.copy(isLoading = result.isLoading) }
-                        }
-                        else -> Unit
-                    }
+    private fun getPokemons() = viewModelScope.launch {
+        repository.fetchPokemons().collect { result ->
+            when (result) {
+                is Resource.Error -> {
+                    coroutineException = result.message
                 }
+
+                is Resource.Loading -> {
+                    state.update { it.copy(isLoading = result.isLoading) }
+                }
+
+                else -> Unit
+            }
         }
     }
 }
