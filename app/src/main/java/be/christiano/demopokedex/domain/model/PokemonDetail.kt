@@ -19,7 +19,14 @@ data class PokemonDetail(
     val stats: List<Int> = emptyList(),
     val isInTeam: Boolean = false,
     val isFavorite: Boolean = false
-)
+) {
+    val hpStat get() = stats.getOrNull(0)
+    val attackStat get() = stats.getOrNull(1)
+    val defenceStat get() = stats.getOrNull(2)
+    val spAttackStat get() = stats.getOrNull(3)
+    val spDefenceStat get() = stats.getOrNull(4)
+    val speedStat get() = stats.getOrNull(5)
+}
 
 data class PokemonIsFavorite(
     val id: Long = 0,

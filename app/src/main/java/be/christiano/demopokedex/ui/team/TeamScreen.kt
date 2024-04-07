@@ -72,7 +72,7 @@ fun TeamScreenContent(
                 .nestedScroll(behavior.nestedScrollConnection)
                 .fillMaxSize(),
             topBar = {
-                MyLargeTopAppBar("Mijn team", navController, behavior = { behavior })
+                MyLargeTopAppBar("My team", navController, behavior = { behavior })
             }
         ) { contentPadding ->
 

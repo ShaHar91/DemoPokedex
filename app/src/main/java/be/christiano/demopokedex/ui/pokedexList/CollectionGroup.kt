@@ -89,8 +89,8 @@ fun CollectionGroupPreview() {
             modifier = Modifier
                 .height(100.dp)
                 .fillMaxWidth(),
-            title = "Mijn team",
-            subTitle = "0 pokemons",
+            title = "My team",
+            subTitle = "0 pokémons",
             gradientColors = listOf(
                 Color(0xFF46469C),
                 Color(0xFF7E32E0)

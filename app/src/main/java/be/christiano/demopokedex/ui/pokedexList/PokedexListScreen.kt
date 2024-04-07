@@ -158,8 +158,8 @@ fun PokedexListScreenContent(
                                 Modifier
                                     .weight(1f)
                                     .height(100.dp),
-                                title = "Mijn team",
-                                subTitle = "${state.amountOfPokemonsInTeam} pokemons",
+                                title = "My team",
+                                subTitle = "${state.amountOfPokemonsInTeam} pokémons",
                                 gradientColors = listOf(
                                     Color(0xFF46469C),
                                     Color(0xFF7E32E0)
@@ -174,8 +174,8 @@ fun PokedexListScreenContent(
                                 Modifier
                                     .weight(1f)
                                     .height(100.dp),
-                                title = "Favorieten",
-                                subTitle = "${state.amountOfFavoritePokemons} pokemons",
+                                title = "Favourites",
+                                subTitle = "${state.amountOfFavoritePokemons} pokémons",
                                 gradientColors = listOf(
                                     Color(0xFF65CB9A),
                                     Color(0xFF15D0DC)

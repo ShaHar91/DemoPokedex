@@ -147,19 +147,19 @@ fun PokemonDetailScreenContent(
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        SectionItem(labelText = "Hoogte") {
+                        SectionItem(labelText = "Height") {
                             Text(text = state.pokemon?.heightInMeters() ?: "")
                         }
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        SectionItem(labelText = "Gewicht") {
+                        SectionItem(labelText = "Weight") {
                             Text(text = state.pokemon?.weightInKg() ?: "")
                         }
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        SectionItem(labelText = "Vaardigheden") {
+                        SectionItem(labelText = "Abilities") {
                             Text(text = state.pokemon?.listOfAbilities()?.joinToString(", ") ?: "")
                         }
                     }
@@ -167,42 +167,46 @@ fun PokemonDetailScreenContent(
                     Spacer(modifier = Modifier.height(28.dp))
 
                     Section(modifier = Modifier.padding(horizontal = 16.dp), headerText = "Statistics") {
-                        StatisticSectionItem(labelText = "HP", staticsLabel = state.pokemon?.stats?.getOrNull(0).toString(), progress = state.pokemon?.stats?.getOrNull(0)?.div(200f) ?: 0f)
+                        StatisticSectionItem(labelText = "HP", staticsLabel = state.pokemon?.hpStat.toString(), progress = state.pokemon?.hpStat?.div(200f) ?: 0f)
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        StatisticSectionItem(labelText = "Attack", staticsLabel = state.pokemon?.stats?.getOrNull(1).toString(), progress = state.pokemon?.stats?.getOrNull(1)?.div(200f) ?: 0f)
+                        StatisticSectionItem(labelText = "Attack", staticsLabel = state.pokemon?.attackStat.toString(), progress = state.pokemon?.attackStat?.div(200f) ?: 0f)
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        StatisticSectionItem(labelText = "Defense", staticsLabel = state.pokemon?.stats?.getOrNull(2).toString(), progress = state.pokemon?.stats?.getOrNull(2)?.div(200f) ?: 0f)
+                        StatisticSectionItem(labelText = "Defense", staticsLabel = state.pokemon?.defenceStat.toString(), progress = state.pokemon?.defenceStat?.div(200f) ?: 0f)
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        StatisticSectionItem(labelText = "Sp. Atk", staticsLabel = state.pokemon?.stats?.getOrNull(3).toString(), progress = state.pokemon?.stats?.getOrNull(3)?.div(200f) ?: 0f)
+                        StatisticSectionItem(labelText = "Sp. Atk", staticsLabel = state.pokemon?.spAttackStat.toString(), progress = state.pokemon?.spAttackStat?.div(200f) ?: 0f)
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        StatisticSectionItem(labelText = "Sp. Def", staticsLabel = state.pokemon?.stats?.getOrNull(4).toString(), progress = state.pokemon?.stats?.getOrNull(4)?.div(200f) ?: 0f)
+                        StatisticSectionItem(labelText = "Sp. Def", staticsLabel = state.pokemon?.spDefenceStat.toString(), progress = state.pokemon?.spDefenceStat?.div(200f) ?: 0f)
 
                         Spacer(modifier = Modifier.height(10.dp))
 
-                        StatisticSectionItem(labelText = "Speed", staticsLabel = state.pokemon?.stats?.getOrNull(5).toString(), progress = state.pokemon?.stats?.getOrNull(5)?.div(200f) ?: 0f)
+                        StatisticSectionItem(labelText = "Speed", staticsLabel = state.pokemon?.speedStat.toString(), progress = state.pokemon?.speedStat?.div(200f) ?: 0f)
                     }
                 }
             }
         }
 
         Button(
-            modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp),
+            // TODO: maybe in time change this to always be enabled and just show a dialog/snackbar when trying to add more to the team
+            enabled = state.canAddToTeam,
             onClick = {
-                if (state.pokemon?.isInTeam == true) {
+                if (state.isInTeam) {
                     onEvent(PokemonDetailEvent.RemoveFromTeam)
                 } else {
                     onEvent(PokemonDetailEvent.AddToTeam)
                 }
             }) {
-            Text(text = if (state.pokemon?.isInTeam == true) "Remove from team" else "Add to team")
+            Text(text = if (state.isInTeam) "Remove from team" else "Add to team")
         }
 
         if (state.isLoading) {

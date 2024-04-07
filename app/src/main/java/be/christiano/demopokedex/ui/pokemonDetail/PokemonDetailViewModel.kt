@@ -11,6 +11,7 @@ import be.christiano.demopokedex.util.Resource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class PokemonDetailViewModel(
@@ -27,6 +28,10 @@ class PokemonDetailViewModel(
         repository.findPokemonByIdFlow(pokemon.number).onEach {
             it ?: return@onEach
             state.tryEmit(state.value.copy(pokemon = it))
+        }.launchIn(viewModelScope)
+
+        repository.findAmountOfPokemonsInTeamFlow().onEach { amountOfPokemons ->
+            state.update { it.copy(amountOfPokemonsInTeam = amountOfPokemons) }
         }.launchIn(viewModelScope)
     }
 

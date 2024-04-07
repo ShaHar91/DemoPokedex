@@ -69,7 +69,7 @@ fun FavoritesScreenContent(
                 .nestedScroll(behavior.nestedScrollConnection)
                 .fillMaxSize(),
             topBar = {
-                MyLargeTopAppBar("Favorieten", navController, behavior = { behavior })
+                MyLargeTopAppBar("Favourites", navController, behavior = { behavior })
             }
         ) { contentPadding ->
 
