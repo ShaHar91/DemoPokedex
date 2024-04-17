@@ -48,6 +48,7 @@ import be.christiano.demopokedex.domain.model.Pokemon
 import be.christiano.demopokedex.domain.model.Sprites
 import be.christiano.demopokedex.ui.MainNavGraph
 import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
+import be.christiano.demopokedex.ui.destinations.BottomSheetFilterScreenDestination
 import be.christiano.demopokedex.ui.destinations.FavoritesScreenDestination
 import be.christiano.demopokedex.ui.destinations.PokemonDetailScreenDestination
 import be.christiano.demopokedex.ui.destinations.TeamScreenDestination
@@ -103,7 +104,9 @@ fun PokedexListScreenContent(
                 .fillMaxSize(),
             topBar = {
                 MyLargeTopAppBar("Pokédex", navController, behavior = { behavior }) {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = {
+                        navController.navigate(BottomSheetFilterScreenDestination())
+                    }) {
                         Icon(ImageVector.vectorResource(id = R.drawable.ic_sort), contentDescription = "Sort")
                     }
                 }

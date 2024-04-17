@@ -55,12 +55,14 @@ fun CollectionGroup(
             ) {
                 Text(
                     text = title,
+                    color = Color.White,
                     style = MaterialTheme.typography.titleMedium,
                     fontSize = 18.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     modifier = Modifier.alpha(0.5f),
+                    color = Color.White,
                     text = subTitle,
                     style = MaterialTheme.typography.labelLarge,
                     fontWeight = FontWeight.Normal

@@ -1,5 +1,6 @@
 package be.christiano.demopokedex.ui.favorites
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -108,7 +109,7 @@ fun NoTeamPokemons() {
             modifier = Modifier,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-            text = "No pokemons as favorite yet"
+            text = "No pokémons as favorite yet"
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -145,7 +146,8 @@ fun ListOfFavoritePokemons(
     }
 }
 
-@Preview
+@Preview(showSystemUi = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun FavoritesScreenPreview() {
     DemoPokedexTheme {

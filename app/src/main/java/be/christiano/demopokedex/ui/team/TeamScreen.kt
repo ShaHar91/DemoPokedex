@@ -1,5 +1,6 @@
 package be.christiano.demopokedex.ui.team
 
+import android.content.res.Configuration
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -111,7 +112,7 @@ fun NoTeamPokemons() {
             modifier = Modifier,
             textAlign = TextAlign.Center,
             style = MaterialTheme.typography.titleLarge.copy(fontWeight = FontWeight.Bold),
-            text = "No pokemons in your team yet"
+            text = "No pokémons in your team yet"
         )
 
         Spacer(modifier = Modifier.height(4.dp))
@@ -148,7 +149,8 @@ fun ListOfTeamPokemons(
     }
 }
 
-@Preview
+@Preview(showSystemUi = true)
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showSystemUi = true)
 @Composable
 fun TeamScreenPreview() {
     DemoPokedexTheme {
