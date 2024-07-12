@@ -1,11 +1,15 @@
 pluginManagement {
     repositories {
-        google()
+        google {
+            content {
+                includeGroupByRegex("com\\.android.*")
+                includeGroupByRegex("com\\.google.*")
+                includeGroupByRegex("androidx.*")
+            }
+        }
         mavenCentral()
         gradlePluginPortal()
 
-        google()
-        mavenCentral()
         maven { url = uri("maven.google.com") }
         maven { url = uri("https://maven.fabric.io/public") }
         maven { url = uri("https://jitpack.io") }
