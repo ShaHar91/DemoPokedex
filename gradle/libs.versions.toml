@@ -1,7 +1,7 @@
 [versions]
 accompanistSwiperefresh = "0.24.2-alpha"
 activityCompose = "1.7.0"
-agp = "8.1.4"
+agp = "8.5.0"
 androidxComposeCompiler = "1.5.0"
 animationsCore = "1.9.56"
 coil = "1.7.5"
