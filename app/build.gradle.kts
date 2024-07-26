@@ -82,8 +82,6 @@ dependencies {
 
     implementation(libs.constraintlayout.compose)
 
-    implementation(libs.accompanist.swiperefresh)
-
     implementation(platform(libs.koin.bom))
     implementation(libs.koin.android)
     implementation(libs.koin.androidx.navigation)
