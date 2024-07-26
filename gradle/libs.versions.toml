@@ -4,6 +4,7 @@ activityCompose = "1.7.0"
 agp = "8.5.0"
 androidxComposeCompiler = "1.5.0"
 animationsCore = "1.9.56"
+apollo = "3.8.5"
 coil = "1.7.5"
 coilCompose = "2.3.0"
 composeBom = "2024.03.00"
@@ -26,6 +27,9 @@ androidx-core-core-ktx = "1.9.0"
 
 
 [libraries]
+apollo-runtime = { module = "com.apollographql.apollo3:apollo-runtime", version.ref = "apollo" }
+apollo-normalized-cache = { module = "com.apollographql.apollo3:apollo-normalized-cache", version.ref = "apollo" }
+
 avif-coder-coil = { module = "com.github.awxkee:avif-coder-coil", version.ref = "coil" }
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-core-ktx" }
 espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "espressoCore" }

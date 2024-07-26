@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlinAndroid)
     id("kotlin-kapt")
     id("kotlin-parcelize")
+    id("com.apollographql.apollo3").version("3.8.5")
 
     alias(libs.plugins.ksp) apply true
 }
@@ -48,10 +49,19 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+
+    apollo {
+        service("service") {
+            packageName.set("be.christiano.demopokedex")
+            introspection {
+                endpointUrl.set("https://beta.pokeapi.co/graphql/v1beta")
+                schemaFile.set(file("src/main/graphql/schema.graphqls"))
+            }
+        }
+    }
 }
 
 dependencies {
-
 
     implementation(libs.core.ktx)
     implementation(libs.lifecycle.runtime.ktx)
@@ -107,4 +117,7 @@ dependencies {
     implementation(libs.measurements)
 
     implementation(libs.avif.coder.coil)
+
+    implementation(libs.apollo.runtime)
+    implementation(libs.apollo.normalized.cache)
 }
