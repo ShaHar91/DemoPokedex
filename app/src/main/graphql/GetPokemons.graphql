@@ -1,0 +1,13 @@
+query GetPokemons {
+    pokemon_v2_pokemon(where: {is_default: {_eq: true}}) {
+        id
+        name
+        order
+        pokemon_v2_pokemontypes {
+            pokemon_v2_type {
+                ...Type
+            }
+        }
+    }
+}
+

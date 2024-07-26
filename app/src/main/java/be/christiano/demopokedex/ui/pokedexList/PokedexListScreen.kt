@@ -58,7 +58,6 @@ import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
 import com.ramcosta.composedestinations.navigation.navigate
-import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -107,7 +106,7 @@ fun PokedexListScreenContent(
                     IconButton(onClick = {
                         navController.navigate(BottomSheetFilterScreenDestination())
                     }) {
-                        Icon(ImageVector.vectorResource(id = R.drawable.ic_sort), contentDescription = "Sort")
+                        Icon(ImageVector.vectorResource(id = R.drawable.ic_tune), contentDescription = "Sort")
                     }
                 }
             },

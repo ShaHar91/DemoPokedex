@@ -7,6 +7,6 @@ import org.koin.dsl.module
 val repoModule = module {
 
     single<PokemonRepo> {
-        PokemonRepoImpl(get(), get())
+        PokemonRepoImpl(get(), get(), get())
     }
 }

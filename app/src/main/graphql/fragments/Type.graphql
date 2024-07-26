@@ -1,0 +1,4 @@
+fragment Type on pokemon_v2_type {
+    id
+    name
+}

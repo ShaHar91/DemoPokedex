@@ -1,6 +1,7 @@
 package be.christiano.demopokedex.ui.pokemonDetail
 
 import android.content.res.Configuration
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -46,7 +48,10 @@ import be.christiano.demopokedex.ui.components.MyLargeTopAppBar
 import be.christiano.demopokedex.ui.shared.Type
 import be.christiano.demopokedex.ui.shared.TypeCard
 import be.christiano.demopokedex.ui.theme.DemoPokedexTheme
+import coil.ImageLoader
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.github.awxkee.avifcoil.decoder.HeifDecoder
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 import com.ramcosta.composedestinations.annotation.Destination
@@ -120,7 +125,10 @@ fun PokemonDetailScreenContent(
                         modifier = Modifier
                             .size(200.dp)
                             .align(Alignment.CenterHorizontally),
-                        model = state.pokemon?.sprites?.front_default,
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(state.pokemon?.number?.let { "https://serebii.net/pokemon/art/${"%03d".format(it)}.png" })
+                            .crossfade(true)
+                            .build(),
                         contentDescription = "Image for ${state.pokemon?.name}"
                     )
 

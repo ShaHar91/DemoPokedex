@@ -1,0 +1,123 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlinAndroid)
+    id("kotlin-kapt")
+    id("kotlin-parcelize")
+    id("com.apollographql.apollo3").version("3.8.5")
+
+    alias(libs.plugins.ksp) apply true
+}
+
+android {
+    namespace = "be.christiano.demopokedex"
+    compileSdk = 34
+
+    defaultConfig {
+        applicationId = "be.christiano.demopokedex"
+        minSdk = 26
+        targetSdk = 33
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        vectorDrawables {
+            useSupportLibrary = true
+        }
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
+    buildFeatures {
+        compose = true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = libs.versions.androidxComposeCompiler.get()
+    }
+    packagingOptions {
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
+
+    apollo {
+        service("service") {
+            packageName.set("be.christiano.demopokedex")
+            introspection {
+                endpointUrl.set("https://beta.pokeapi.co/graphql/v1beta")
+                schemaFile.set(file("src/main/graphql/schema.graphqls"))
+            }
+        }
+    }
+}
+
+dependencies {
+
+    implementation(libs.core.ktx)
+    implementation(libs.lifecycle.runtime.ktx)
+    implementation(libs.activity.compose)
+
+    implementation(platform(libs.compose.bom))
+
+    implementation(libs.ui)
+    implementation(libs.ui.tooling.preview)
+    implementation(libs.material3)
+    implementation(libs.lifecycle.viewmodel.compose)
+    testImplementation(libs.junit)
+    androidTestImplementation(libs.ext.junit)
+    androidTestImplementation(libs.espresso.core)
+//    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
+
+    implementation(libs.constraintlayout.compose)
+
+    implementation(libs.accompanist.swiperefresh)
+
+    implementation(platform(libs.koin.bom))
+    implementation(libs.koin.android)
+    implementation(libs.koin.androidx.navigation)
+    implementation(libs.koin.androidx.compose)
+    testImplementation(libs.koin.test.junit4)
+
+    // gson (https://github.com/google/gson)
+    implementation(libs.gson)
+
+    //networking
+    implementation(libs.converter.scalars)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+
+    implementation(libs.okhttp)
+    implementation(libs.logging.interceptor)
+
+    // Room Database
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+
+    // optional - Kotlin Extensions and Coroutines support for Room  //
+    implementation(libs.room.ktx)
+
+    // Compose Nav Destinations
+    implementation(libs.animations.core)
+    ksp(libs.compose.destinations.ksp)
+
+    implementation(libs.coil.compose)
+
+    implementation(libs.measurements)
+
+    implementation(libs.avif.coder.coil)
+
+    implementation(libs.apollo.runtime)
+    implementation(libs.apollo.normalized.cache)
+}
