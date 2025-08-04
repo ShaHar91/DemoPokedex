@@ -66,15 +66,15 @@ fun PokemonDetailScreen(
     }
     val state by viewModel.state.collectAsState()
 
-    PokemonDetailScreenContent(navController, state, viewModel::onEvent)
+    PokemonDetailScreenContent(navController, state, viewModel::sendIntent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokemonDetailScreenContent(
     navController: NavController,
-    state: PokemonDetailState,
-    onEvent: (PokemonDetailEvent) -> Unit
+    state: PokemonDetailContract.State,
+    sendIntent: (PokemonDetailContract.Intent) -> Unit
 ) {
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -87,7 +87,7 @@ fun PokemonDetailScreenContent(
                 .fillMaxSize(),
             topBar = {
                 MyLargeTopAppBar(state.pokemon?.name ?: "", navController = navController, behavior = { behavior }) {
-                    IconButton(onClick = { onEvent(PokemonDetailEvent.LikeUnlike) }) {
+                    IconButton(onClick = { sendIntent(PokemonDetailContract.Intent.LikeUnlike) }) {
                         if (state.pokemon?.isFavorite == true) {
                             Icon(Icons.Filled.Favorite, contentDescription = "Unfavorite this pokemon")
                         } else {
@@ -183,6 +183,8 @@ fun PokemonDetailScreenContent(
 
                     StatisticSectionItem(labelText = "Speed", staticsLabel = state.pokemon?.speedStat.toString(), progress = state.pokemon?.speedStat?.div(200f) ?: 0f)
                 }
+
+                Spacer(modifier = Modifier.height(100.dp))
             }
         }
 
@@ -195,9 +197,9 @@ fun PokemonDetailScreenContent(
             enabled = state.canAddToTeam,
             onClick = {
                 if (state.isInTeam) {
-                    onEvent(PokemonDetailEvent.RemoveFromTeam)
+                    sendIntent(PokemonDetailContract.Intent.RemoveFromTeam)
                 } else {
-                    onEvent(PokemonDetailEvent.AddToTeam)
+                    sendIntent(PokemonDetailContract.Intent.AddToTeam)
                 }
             }) {
             Text(text = if (state.isInTeam) "Remove from team" else "Add to team")
@@ -216,7 +218,7 @@ fun PokemonDetailScreenPreview() {
     DemoPokedexTheme {
         PokemonDetailScreenContent(
             rememberNavController(),
-            PokemonDetailState(
+            PokemonDetailContract.State(
                 PokemonDetail(1, Sprites(), "Bulbasaur", "grass", "poison", "Overgrow", null, "Chlorophyl", 18, 20, listOf(45, 60, 48, 65, 65, 45), isFavorite = true)
             )
         ) {}

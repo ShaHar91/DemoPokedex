@@ -22,8 +22,6 @@ dependencyResolutionManagement {
         google()
         mavenCentral()
 
-        google()
-        mavenCentral()
         maven { url = uri("maven.google.com") }
         maven { url = uri("https://maven.fabric.io/public") }
         maven { url = uri("https://jitpack.io") }

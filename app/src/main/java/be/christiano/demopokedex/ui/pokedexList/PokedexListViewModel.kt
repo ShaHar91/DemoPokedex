@@ -7,7 +7,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import be.christiano.demopokedex.domain.repository.PokemonRepo
 import be.christiano.demopokedex.util.Resource
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -18,52 +22,58 @@ import kotlinx.coroutines.launch
 
 class PokedexListViewModel(
     private val repository: PokemonRepo
-) : ViewModel() {
+) : ViewModel(), PokedexListContract {
 
-    val state = MutableStateFlow(PokedexListState())
+    private val _state = MutableStateFlow(PokedexListContract.State())
+    override val state = _state.asStateFlow()
+
+    private val _effect = MutableSharedFlow<PokedexListContract.Effect>()
+    override val effect = _effect.asSharedFlow()
 
     var coroutineException by mutableStateOf<String?>(null)
 
     init {
-        getPokemons()
+        sendIntent(PokedexListContract.Intent.Refresh)
 
-        state.map { it.searchQuery }.debounce { if (it.isNotBlank()) 500 else 0 }.flatMapLatest {
-            repository.findPokemons(it)
-        }.onEach { list ->
-            state.update { it.copy(pokemons = list) }
-        }.launchIn(viewModelScope)
-
-        repository.findAmountOfFavoritesFlow().onEach { amount ->
-            state.update { it.copy(amountOfFavoritePokemons = amount) }
-        }.launchIn(viewModelScope)
-
-        repository.findAmountOfPokemonsInTeamFlow().onEach { amount ->
-            state.update { it.copy(amountOfPokemonsInTeam = amount) }
+        combine(
+            repository.findAmountOfFavoritesFlow(),
+            repository.findAmountOfPokemonsInTeamFlow(),
+            state.map { it.searchQuery }.debounce { if (it.isNotBlank()) 500 else 0 }.flatMapLatest {
+                repository.findPokemons(it)
+            }
+        ) { amountOfFavorites, amountOfPokemonsInTeam, pokemons ->
+            val currentState = _state.value
+            currentState.copy(
+                amountOfPokemonsInTeam = amountOfPokemonsInTeam,
+                amountOfFavoritePokemons = amountOfFavorites,
+                pokemons = pokemons
+            )
+        }.onEach { newState ->
+            updateState { newState }
         }.launchIn(viewModelScope)
     }
 
-    fun onEvent(event: PokedexListEvent) {
-        when (event) {
-            PokedexListEvent.Refresh -> getPokemons()
-            is PokedexListEvent.OnSearchQueryChanged -> {
-                state.update { it.copy(searchQuery = event.query) }
-            }
-
-            PokedexListEvent.ToggleOrderSection -> Unit
+    override fun sendIntent(intent: PokedexListContract.Intent) = viewModelScope.launch {
+        when (intent) {
+            is PokedexListContract.Intent.Refresh -> getPokemons()
+            is PokedexListContract.Intent.OnSearchQueryChanged -> updateState { it.copy(searchQuery = intent.query) }
+            is PokedexListContract.Intent.ToggleOrderSection -> Unit
         }
     }
 
-    private fun getPokemons() = viewModelScope.launch {
+    override fun emitEffect(effect: PokedexListContract.Effect) = viewModelScope.launch {
+        _effect.emit(effect)
+    }
+
+    override fun updateState(block: (PokedexListContract.State) -> PokedexListContract.State) {
+        _state.update(block)
+    }
+
+    private suspend fun getPokemons() {
         repository.fetchPokemons().collect { result ->
             when (result) {
-                is Resource.Error -> {
-                    coroutineException = result.message
-                }
-
-                is Resource.Loading -> {
-                    state.update { it.copy(isLoading = result.isLoading) }
-                }
-
+                is Resource.Error -> coroutineException = result.message
+                is Resource.Loading -> updateState { it.copy(isLoading = result.isLoading) }
                 else -> Unit
             }
         }

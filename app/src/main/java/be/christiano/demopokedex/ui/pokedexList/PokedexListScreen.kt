@@ -68,22 +68,22 @@ fun PokedexListScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(key1 = viewModel.coroutineException) {
+    LaunchedEffect(viewModel.coroutineException) {
         viewModel.coroutineException?.let {
             snackbarHostState.showSnackbar(it)
             viewModel.coroutineException = null
         }
     }
 
-    PokedexListScreenContent(state = state, navController = navController, viewModel::onEvent)
+    PokedexListScreenContent(state = state, navController = navController, viewModel::sendIntent)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun PokedexListScreenContent(
-    state: PokedexListState,
+    state: PokedexListContract.State,
     navController: NavController,
-    onEvent: (PokedexListEvent) -> Unit
+    sendIntent: (PokedexListContract.Intent) -> Unit
 ) {
     val behavior = TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
     val snackbarHostState = remember { SnackbarHostState() }
@@ -124,7 +124,7 @@ fun PokedexListScreenContent(
                             .padding(horizontal = 16.dp),
                         query = state.searchQuery,
                         onQueryChange = {
-                            onEvent(PokedexListEvent.OnSearchQueryChanged(it))
+                            sendIntent(PokedexListContract.Intent.OnSearchQueryChanged(it))
                         },
                         onSearch = {},
                         shape = RoundedCornerShape(10.dp),
@@ -178,7 +178,7 @@ fun PokedexListScreenContent(
                     LazyColumn(
                         modifier = Modifier
                             .fillMaxSize()
-                            .padding(top = 10.dp, start = 16.dp, end = 16.dp)
+                            .padding(top = 10.dp, start = 16.dp, end = 16.dp),
                     ) {
                         itemsIndexed(state.pokemons) { index, pokemon ->
                             if (index == 0) {
@@ -208,7 +208,7 @@ fun PokedexListScreenContent(
 fun PokedexListScreenPreview() {
     DemoPokedexTheme {
         PokedexListScreenContent(
-            PokedexListState(
+            PokedexListContract.State(
                 pokemons = listOf(
                     Pokemon(1, Sprites(), "Bulbasaur", "grass", "poison"),
                     Pokemon(3, Sprites(), "Charmander", "fire", null),
